@@ -104,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
 
             ListTile(
-              title: Text('Achievements'),
+              title: Text('Resources'),
               onTap: () {
                 Navigator.push(
                     context,

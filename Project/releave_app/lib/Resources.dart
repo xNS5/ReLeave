@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
 // ignore: camel_case_types
 class resourcesMain extends StatelessWidget {
