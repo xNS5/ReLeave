@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Resources.dart';
+import 'Check-in.dart';
 
 void main() {
   runApp(MyApp());
@@ -112,6 +113,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 );
               },
             ),
+
+            ListTile(
+              title: Text('Check In'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CheckInMain()),
+                );
+              },
+            )
           ],
         ),
       ),
