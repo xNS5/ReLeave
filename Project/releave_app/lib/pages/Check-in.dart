@@ -132,7 +132,7 @@ class _CheckInState extends State<CheckIn> {
                 );
               },
               tooltip: 'Check in!',
-              child: Icon(Icons.arrow_forward_rounded),
+              child: Icon(Icons.arrow_forward),
             ),
           ],
         ),
