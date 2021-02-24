@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'SobrietyCounter.dart';
 
 // ignore: camel_case_types
 class CheckInMain extends StatelessWidget {
@@ -22,8 +23,6 @@ class CheckIn extends StatefulWidget {
   final String title;
   @override
   _CheckInState createState() => _CheckInState();
-
-
 }
 
 class _CheckInState extends State<CheckIn> {
@@ -68,6 +67,9 @@ class _CheckInState extends State<CheckIn> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(
