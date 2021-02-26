@@ -4,17 +4,26 @@ import 'package:sqflite/sqflite.dart';
 
 
 User t = new User();
-void main() async {
+User q = new User();
+void main() {
   runApp(Home());
 }
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    User u = new User();
-    u.firstName = "Michael";
-    u.lastName = "Kennedy";
-    SqlitedbHelper.db.insert(u).then((user) => t = user);
+    User u = new User.data("Michael", "Kennedy", "11/06/1997", "02/18/2021");
+    if(t.firstName == null){
+      u.consumptionMethod = "Bong";
+      u.moneySpent = 100.00;
+      u.consumptionAmount = 10;
+      SqlitedbHelper.db.insertUser(u).then((user) => t = user);
+    }
+    SqlitedbHelper.db.getUser().then((user) {
+      if(user != null){
+        q = user;
+      }
+    });
     return MaterialApp(
       title: 'ReLeave',
       theme: ThemeData(
@@ -35,15 +44,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomeState extends State<HomePage>{
-  @override
-  void initState(){
-    super.initState();
-
-    SqlitedbHelper.db.getUser().then((user) {
-      print(user.firstName);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
 

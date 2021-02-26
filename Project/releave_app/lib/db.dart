@@ -19,14 +19,18 @@ class User {
   int _id;
   String _firstName;
   String _lastName;
-  // String _birthDate;
-  // String _startDate;
-  // String _userName;
-  // Consumption _c;
+  String _birthdate;
+  String _startdate;
+  String _username;
+  String _consumptionMethod;
+  int _amount;
+  double _money;
 
   User();
 
-  User.data(this._firstName, this._lastName);
+  User.data(this._firstName, this._lastName, this._birthdate, this._startdate,  [this._username]);
+
+  User.consumption(this._consumptionMethod, this._amount, this._money);
 
   int get id => _id;
 
@@ -34,13 +38,29 @@ class User {
 
   String get lastName => _lastName;
 
-  // String get birthDate => _birthDate;
-  //
-  // String get startDate => _startDate;
-  //
-  // String get userName => _userName;
+  String get birthDate => _birthdate;
 
-  // Consumption get getConsumption => _c;
+  String get startDate => _startdate;
+
+  String get userName => _username;
+
+  String get consumption => _consumptionMethod;
+
+  int get amount => _amount;
+
+  double get money => _money;
+
+  set consumptionMethod(String method){
+    this._consumptionMethod = method;
+  }
+
+  set consumptionAmount(int amount){
+    this._amount = amount;
+  }
+
+  set moneySpent(double money){
+    this._money = money;
+  }
 
 
   /*
@@ -66,26 +86,26 @@ class User {
   /*
   * TODO: Make sure input string is some date format with separators. E.g. "12/12/2012" or to "01/01/2001"
   * */
-  // set birthDate(String date){
-  //   if(date.length != 10){
-  //     throw new FormatException("User: Unable to set birthdate");
-  //   }
-  //   this._birthDate = date;
-  // }
-  //
-  // set startDate(String date){
-  //   if(date.length != 10){
-  //     throw new FormatException("User: Unable to set startdate");
-  //   }
-  //   this._startDate = date;
-  // }
-  //
-  // set userName(String name){
-  //   if(name.length <= 0){
-  //     throw new FormatException("User: Unable to set username");
-  //   }
-  //   this._userName = name;
-  // }
+  set birthDate(String date){
+    if(date.length != 10){
+      throw new FormatException("User: Unable to set birthdate");
+    }
+    this._birthdate = date;
+  }
+
+  set startDate(String date){
+    if(date.length != 10){
+      throw new FormatException("User: Unable to set startdate");
+    }
+    this._startdate = date;
+  }
+
+  set userName(String name){
+    if(name.length <= 0){
+      throw new FormatException("User: Unable to set username");
+    }
+    this._username = name;
+  }
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
@@ -94,12 +114,12 @@ class User {
     }
     map['firstName'] = _firstName;
     map['lastName'] = _lastName;
-    // map['birth-date'] = _birthDate;
-    // map['start-date'] = _startDate;
-    // map['username'] = _userName;
-    // map['consumption-method'] = _c._consumptionMethod;
-    // map['consumption-amount'] = _c._amount;
-    // map['consumption-spent'] = _c._money;
+    map['birthdate'] = _birthdate;
+    map['startdate'] = _startdate;
+    // map['username'] = _username;
+    // map['consumptionMethod'] = _consumptionMethod;
+    // map['consumptionAmount'] = _amount;
+    // map['consumptionSpent'] = _money;
 
     return map;
   }
@@ -107,12 +127,12 @@ class User {
   User.fromMap(Map<String, dynamic> map){
     this._firstName = map['firstName'];
     this._lastName = map['lastName'];
-    // this._birthDate = map['birth-date'];
-    // this._startDate = map['start-date'];
-    // this._userName = map['username'];
-    // this._c._consumptionMethod = map['consumption-method'];
-    // this._c._amount = map['consumption-amount'];
-    // this._c._money = map['consumption-spent'];
+    this._birthdate = map['birthdate'];
+    this._startdate = map['startdate'];
+    // this._username = map['username'];
+    // this._consumptionMethod = map['consumptionMethod'];
+    // this._amount = map['consumptionAmount'];
+    // this._money = map['consumptionSpent'];
   }
 }
 
@@ -273,33 +293,14 @@ class CheckInData{
 * amount: amount consumed on average (grams)
 * money: average money spent on cannabis
 * */
-class Consumption{
-  String _consumptionMethod;
-  int _amount;
-  double _money;
-
-  Consumption();
-
-  Consumption.Data(this._consumptionMethod, this._amount, this._money);
-
-  String get consumption => _consumptionMethod;
-
-  int get amount => _amount;
-
-  double get money => _money;
-
-  set consumptionMethod(String method){
-    this._consumptionMethod = method;
-  }
-
-  set consumptionAmount(int amount){
-    this._amount = amount;
-  }
-
-  set moneySpent(double money){
-    this._money = money;
-  }
-}
+// class Consumption{
+//
+//
+//   Consumption();
+//
+//   Consumption.Data(this._consumptionMethod, this._amount, this._money);
+//
+// }
 
 
 /*
@@ -382,9 +383,15 @@ class SqlitedbHelper {
         version: 1,
         onCreate: (Database db, int version) async {
           await db.execute('CREATE TABLE user('
-              'id INTEGER PRIMARY KEY,'
+              'id INTEGER PRIMARY KEY AUTOINCREMENT,'
               'firstName TEXT,'
-              'lastName TEXT)');
+              'lastName TEXT,'
+              'birthdate TEXT,'
+              'startdate TEXT)');
+              // 'username TEXT,'
+              // 'consumptionMethod TEXT,'
+              // 'consumptionAmount INTEGER,'
+              // 'consumptionExpense REAL)');
         }
     );
   }
@@ -393,7 +400,7 @@ class SqlitedbHelper {
 
   Future<User> getUser() async{
     final db = await database;
-    var user = await db.rawQuery('SELECT * FROM user');
+    var user = await db.query('user');
     if(user.length > 0){
       return new User.fromMap(user.last);
     }
@@ -402,14 +409,18 @@ class SqlitedbHelper {
 
 //Update
 
-  Future<User> insert(User user) async{
+  Future<User> insertUser(User user) async{
     final db = await database;
-    user._id = await db.insert("user", user.toMap());
+    user._id = await db.insert('user', user.toMap());
     return user;
   }
 
 
 //Delete
+  Future<void> deleteUser(User user) async{
+    final db = await database;
+    await db.delete('user', where: '_id = ?', whereArgs: [user.id]);
+  }
 }
 
 
