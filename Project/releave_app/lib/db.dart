@@ -1,5 +1,6 @@
 import "dart:io";
 import "package:path/path.dart";
+import 'package:releave_app/lib.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
@@ -18,14 +19,14 @@ class User {
   int _id;
   String _firstName;
   String _lastName;
-  String _birthDate;
-  String _startDate;
-  String _userName;
-  Consumption _c;
+  // String _birthDate;
+  // String _startDate;
+  // String _userName;
+  // Consumption _c;
 
-  User(this._id, this._firstName, this._lastName, this._birthDate, this._userName, this._c);
+  User();
 
-  User.noReddit(this._id, this._firstName, this._lastName, this._birthDate, this._c);
+  User.data(this._firstName, this._lastName);
 
   int get id => _id;
 
@@ -33,13 +34,13 @@ class User {
 
   String get lastName => _lastName;
 
-  String get birthDate => _birthDate;
+  // String get birthDate => _birthDate;
+  //
+  // String get startDate => _startDate;
+  //
+  // String get userName => _userName;
 
-  String get startDate => _startDate;
-
-  String get userName => _userName;
-
-  Consumption get getConsumption => _c;
+  // Consumption get getConsumption => _c;
 
 
   /*
@@ -55,64 +56,63 @@ class User {
 
   set lastName(String name){
     if(name.isEmpty){
-      this._firstName = " ";
+      this._lastName = " ";
     }
     else{
-      this._firstName = name;
+      this._lastName = name;
     }
   }
 
   /*
   * TODO: Make sure input string is some date format with separators. E.g. "12/12/2012" or to "01/01/2001"
   * */
-  set birthDate(String date){
-    if(date.length != 10){
-      throw new FormatException("User: Unable to set birthdate");
-    }
-    this._birthDate = date;
-  }
-
-  set startDate(String date){
-    if(date.length != 10){
-      throw new FormatException("User: Unable to set startdate");
-    }
-    this._startDate = date;
-  }
-
-  set userName(String name){
-    if(name.length <= 0){
-      throw new FormatException("User: Unable to set username");
-    }
-    this._userName = name;
-  }
+  // set birthDate(String date){
+  //   if(date.length != 10){
+  //     throw new FormatException("User: Unable to set birthdate");
+  //   }
+  //   this._birthDate = date;
+  // }
+  //
+  // set startDate(String date){
+  //   if(date.length != 10){
+  //     throw new FormatException("User: Unable to set startdate");
+  //   }
+  //   this._startDate = date;
+  // }
+  //
+  // set userName(String name){
+  //   if(name.length <= 0){
+  //     throw new FormatException("User: Unable to set username");
+  //   }
+  //   this._userName = name;
+  // }
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
     if(_id != null) {
-      map['id'] = _id;
+      map['id'] = 1;
     }
-    map['first-name'] = _firstName;
-    map['last-name'] = _lastName;
-    map['birth-date'] = _birthDate;
-    map['start-date'] = _startDate;
-    map['username'] = _userName;
-    map['consumption-method'] = _c._consumptionMethod;
-    map['consumption-amount'] = _c._amount;
-    map['consumption-spent'] = _c._money;
+    map['firstName'] = _firstName;
+    map['lastName'] = _lastName;
+    // map['birth-date'] = _birthDate;
+    // map['start-date'] = _startDate;
+    // map['username'] = _userName;
+    // map['consumption-method'] = _c._consumptionMethod;
+    // map['consumption-amount'] = _c._amount;
+    // map['consumption-spent'] = _c._money;
 
     return map;
   }
 
   User.fromMap(Map<String, dynamic> map){
-    this._id = map['id'];
-    this._firstName = map['first-name'];
-    this._lastName = map['last-name'];
-    this._birthDate = map['birth-date'];
-    this._startDate = map['start-date'];
-    this._userName = map['username'];
-    this._c._consumptionMethod = map['consumption-method'];
-    this._c._amount = map['consumption-amount'];
-    this._c._money = map['consumption-spent'];
+    this._firstName = map['firstName'];
+    this._lastName = map['lastName'];
+    // this._birthDate = map['birth-date'];
+    // this._startDate = map['start-date'];
+    // this._userName = map['username'];
+    // this._c._consumptionMethod = map['consumption-method'];
+    // this._c._amount = map['consumption-amount'];
+    // this._c._money = map['consumption-spent'];
   }
 }
 
@@ -130,13 +130,15 @@ class Journal{
   bool _posted;
   String _redditURL;
 
-  Journal(this._id, this._date, this._content, this._posted, [this._redditURL]);
+  Journal();
+
+  Journal.Data(this._id, this._date, this._content, this._posted, [this._redditURL]);
 
   String get date => _date;
 
   String get content => _content;
 
-  CheckIn get checkin => checkin;
+  CheckInData get checkin => checkin;
 
   bool get posted => _posted;
 
@@ -185,7 +187,9 @@ class Feelings{
   int _frustrated;
   int _angry;
 
-  Feelings(this._id, this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry);
+  Feelings();
+
+  Feelings.Data(this._id, this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry);
 
   String get date => _date;
 
@@ -238,12 +242,14 @@ class Feelings{
 * date: date checked in
 * checkin: the status of their check-in
 * */
-class CheckIn{
+class CheckInData{
   int _id;
   String _date;
   bool _checkin;
 
-  CheckIn(this._id, this._date, this._checkin);
+  CheckInData();
+
+  CheckInData.Data(this._id, this._date, this._checkin);
 
   String get date => _date;
 
@@ -272,7 +278,9 @@ class Consumption{
   int _amount;
   double _money;
 
-  Consumption(this._consumptionMethod, this._amount, this._money);
+  Consumption();
+
+  Consumption.Data(this._consumptionMethod, this._amount, this._money);
 
   String get consumption => _consumptionMethod;
 
@@ -316,7 +324,9 @@ class Goal{
   int _goalConsumptionAmount;
   double _goalMoney;
 
-  Goal(this._id, this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
+  Goal();
+
+  Goal.Data(this._id, this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
 
   String get title => _title;
 
@@ -354,77 +364,51 @@ class Goal{
 
 
 class SqlitedbHelper {
- static SqlitedbHelper _helper;
- static Database _db;
+  SqlitedbHelper._();
+  static final SqlitedbHelper db = SqlitedbHelper._();
+  Database _database;
 
- SqlitedbHelper._createInstance();
+  Future<Database> get database async {
+    if (_database == null) {
+      _database = await _createDB();
+    }
+    return _database;
+  }
 
- factory SqlitedbHelper() {
-   if(_helper = null){
-     _helper = SqlitedbHelper._createInstance();
-   }
-   return _helper;
- }
-
- Future<Database> initializeDatabase() async {
-   Directory dir = await getApplicationDocumentsDirectory();
-   String path = dir.path + 'releave.db';
-   var db = await openDatabase(path, version: 1 , onCreate: _createDB);
-   return db;
- }
-
- Future<Database> get database async{
-   if(_db == null){
-     _db = await initializeDatabase();
-   }
-   return _db;
- }
-
-// Create
- void _createDB(Database db, int version) async{
-   await db.execute('CREATE TABLE user('
-       'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-       'first-name TEXT,'
-       'last-name TEXT,'
-       'birth-date TEXT.'
-       'start-date TEXT,'
-       'username TEXT,'
-       'consumption-method TEXT,'
-       'consumption-amount INTEGER,'
-       'consumption-cost REAL');
-   await db.execute('CREATE TABLE journal('
-       'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-       'date TEXT,'
-       'content TEXT,'
-       'posted BOOLEAN,'
-       'url TEXT');
-   await db.execute('CREATE TABLE feelings('
-       'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-       'date TEXT,'
-       'happy INTEGER,'
-       'sad INTEGER,'
-       'anxious INTEGER,'
-       'craving INTEGER,'
-       'frustration INTEGER,'
-       'anger INTEGER,'
-       'loneliness INTEGER');
-   await db.execute('CREATE TABLE goals('
-       'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-       'title TEXT,'
-       'goal-type TEXT,'
-       'consumption-method TEXT,'
-       'goal-amount INTEGER,'
-       'goal-money REAL');
- }
+  Future<Database> _createDB() async {
+    String path = join((await getDatabasesPath()), "releave.db");
+    return await openDatabase(
+        path,
+        version: 1,
+        onCreate: (Database db, int version) async {
+          await db.execute('CREATE TABLE user('
+              'id INTEGER PRIMARY KEY,'
+              'firstName TEXT,'
+              'lastName TEXT)');
+        }
+    );
+  }
 
 //Retrieve
-  Future<List<Map<String, dynamic>>> get(table) async{
-   Database db = await this.database;
 
-   var result = await db.rawQuery('SELECT * FROM' + table);
-   return result;
+  Future<User> getUser() async{
+    final db = await database;
+    var user = await db.rawQuery('SELECT * FROM user');
+    if(user.length > 0){
+      return new User.fromMap(user.last);
+    }
+    return null;
   }
+
 //Update
+
+  Future<User> insert(User user) async{
+    final db = await database;
+    user._id = await db.insert("user", user.toMap());
+    return user;
+  }
+
+
 //Delete
 }
 

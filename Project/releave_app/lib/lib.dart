@@ -1,5 +1,6 @@
 library lib;
 
+export 'db.dart';
 export 'pages/Achievements.dart';
 export 'pages/Check-in.dart';
 export 'pages/Goals.dart';
