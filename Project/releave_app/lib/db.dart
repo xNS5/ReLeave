@@ -28,7 +28,7 @@ class User {
 
   User();
 
-  User.data(this._firstName, this._lastName, this._birthdate, this._startdate,  [this._username]);
+  User.data(this._id, this._firstName, this._lastName, this._birthdate, this._startdate,  [this._username]);
 
   User.consumption(this._consumptionMethod, this._amount, this._money);
 
@@ -116,23 +116,24 @@ class User {
     map['lastName'] = _lastName;
     map['birthdate'] = _birthdate;
     map['startdate'] = _startdate;
-    // map['username'] = _username;
-    // map['consumptionMethod'] = _consumptionMethod;
-    // map['consumptionAmount'] = _amount;
-    // map['consumptionSpent'] = _money;
+    map['username'] = _username;
+    map['consumptionMethod'] = _consumptionMethod;
+    map['consumptionAmount'] = _amount;
+    map['consumptionExpense'] = _money;
 
     return map;
   }
 
   User.fromMap(Map<String, dynamic> map){
+    this._id = map['id'];
     this._firstName = map['firstName'];
     this._lastName = map['lastName'];
     this._birthdate = map['birthdate'];
     this._startdate = map['startdate'];
-    // this._username = map['username'];
-    // this._consumptionMethod = map['consumptionMethod'];
-    // this._amount = map['consumptionAmount'];
-    // this._money = map['consumptionSpent'];
+    this._username = map['username'];
+    this._consumptionMethod = map['consumptionMethod'];
+    this._amount = map['consumptionAmount'];
+    this._money = map['consumptionExpense'];
   }
 }
 
@@ -166,7 +167,7 @@ class Journal{
 
   set entryDate(String date){
     if(date.length != 10){
-      throw new FormatException("Journal: unable to set entrydate");
+      throw new FormatException("Journal: unable to set entry date");
     }
     this._date = date;
   }
@@ -288,22 +289,6 @@ class CheckInData{
 }
 
 /*
-* Consumption class
-* consumption method: how the user consumed cannabis
-* amount: amount consumed on average (grams)
-* money: average money spent on cannabis
-* */
-// class Consumption{
-//
-//
-//   Consumption();
-//
-//   Consumption.Data(this._consumptionMethod, this._amount, this._money);
-//
-// }
-
-
-/*
 * Goal class
 * title: title of the user goal
 * goalType: type of goal
@@ -384,14 +369,14 @@ class SqlitedbHelper {
         onCreate: (Database db, int version) async {
           await db.execute('CREATE TABLE user('
               'id INTEGER PRIMARY KEY AUTOINCREMENT,'
-              'firstName TEXT,'
-              'lastName TEXT,'
-              'birthdate TEXT,'
-              'startdate TEXT)');
-              // 'username TEXT,'
-              // 'consumptionMethod TEXT,'
-              // 'consumptionAmount INTEGER,'
-              // 'consumptionExpense REAL)');
+              'firstName TEXT, '
+              'lastName TEXT, '
+              'birthdate TEXT, '
+              'startdate TEXT, '
+              'username TEXT, '
+              'consumptionMethod TEXT, '
+              'consumptionAmount INTEGER, '
+              'consumptionExpense REAL) ');
         }
     );
   }
@@ -400,27 +385,48 @@ class SqlitedbHelper {
 
   Future<User> getUser() async{
     final db = await database;
-    var user = await db.query('user');
-    if(user.length > 0){
-      return new User.fromMap(user.last);
+    try {
+      var user = await db.rawQuery("SELECT * FROM user WHERE id = 1");
+      if (user.length > 0) {
+        return new User.fromMap(user.first);
+      }
+    } catch (e){
+      print("Error getting user from database: "+ e);
     }
     return null;
   }
 
-//Update
+//Insert User
 
-  Future<User> insertUser(User user) async{
+  Future<bool> insertUser(User user) async{
     final db = await database;
-    user._id = await db.insert('user', user.toMap());
-    return user;
+    try {
+      user._id = await db.insert('user', user.toMap());
+    } catch (e){
+      print("Error inserting into database: " + e);
+      return false;
+    }
+    return true;
   }
+
+// Update User
 
 
 //Delete
-  Future<void> deleteUser(User user) async{
+  Future<bool> deleteUser() async{
     final db = await database;
-    await db.delete('user', where: '_id = ?', whereArgs: [user.id]);
+    try{
+      await db.rawDelete('DELETE FROM user WHERE id = 1');
+      return true;
+    } catch (e){
+      print("Unable to delete user: " + e);
+    }
+    return false;
   }
+
+
+
+
 }
 
 

@@ -12,16 +12,34 @@ void main() {
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    User u = new User.data("Michael", "Kennedy", "11/06/1997", "02/18/2021");
+    User u = new User.data(1, "Michael", "Kennedy", "11/06/1997", "02/18/2021");
     if(t.firstName == null){
       u.consumptionMethod = "Bong";
       u.moneySpent = 100.00;
       u.consumptionAmount = 10;
-      SqlitedbHelper.db.insertUser(u).then((user) => t = user);
+      SqlitedbHelper.db.insertUser(u).then((status)
+      {
+        if(status){
+          print("Inserted user into database");
+        }
+      });
     }
     SqlitedbHelper.db.getUser().then((user) {
-      if(user != null){
+      if(q.firstName == null){
         q = user;
+        print("User has been pulled from the database: " + q.toMap().toString());
+      }
+    });
+    SqlitedbHelper.db.deleteUser().then((status){
+      if(status){
+        print("Deleted user from database");
+      } else {
+        print("Unable to delete user from database");
+      }
+    });
+    SqlitedbHelper.db.getUser().then((user) {
+      if(user == null){
+        print("No user!");
       }
     });
     return MaterialApp(
