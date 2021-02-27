@@ -50,6 +50,12 @@ class User {
 
   double get money => _money;
 
+  set id(int i){
+    if(i != 0){
+      this._id = i;
+    }
+  }
+
   set consumptionMethod(String method){
     this._consumptionMethod = method;
   }
@@ -109,9 +115,6 @@ class User {
 
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
-    if(_id != null) {
-      map['id'] = 1;
-    }
     map['firstName'] = _firstName;
     map['lastName'] = _lastName;
     map['birthdate'] = _birthdate;
@@ -125,15 +128,17 @@ class User {
   }
 
   User.fromMap(Map<String, dynamic> map){
-    this._id = map['id'];
-    this._firstName = map['firstName'];
-    this._lastName = map['lastName'];
-    this._birthdate = map['birthdate'];
-    this._startdate = map['startdate'];
-    this._username = map['username'];
-    this._consumptionMethod = map['consumptionMethod'];
-    this._amount = map['consumptionAmount'];
-    this._money = map['consumptionExpense'];
+    if(map != null){
+      this._id = map['id'];
+      this._firstName = map['firstName'];
+      this._lastName = map['lastName'];
+      this._birthdate = map['birthdate'];
+      this._startdate = map['startdate'];
+      this._username = map['username'];
+      this._consumptionMethod = map['consumptionMethod'];
+      this._amount = map['consumptionAmount'];
+      this._money = map['consumptionExpense'];
+    }
   }
 }
 
@@ -148,12 +153,14 @@ class Journal{
   int _id;
   String _date;
   String _content;
-  bool _posted;
+  int _posted;
   String _redditURL;
 
   Journal();
 
   Journal.Data(this._id, this._date, this._content, this._posted, [this._redditURL]);
+
+  int get id => _id;
 
   String get date => _date;
 
@@ -161,9 +168,15 @@ class Journal{
 
   CheckInData get checkin => checkin;
 
-  bool get posted => _posted;
+  bool get posted => (_posted == 1) ? true : false;
 
   String get redditUrl => _redditURL;
+
+  set id(int i){
+    if(i != 0){
+      this._id = i;
+    }
+  }
 
   set entryDate(String date){
     if(date.length != 10){
@@ -177,15 +190,33 @@ class Journal{
   }
 
   set setPosted(bool status){
-    this._posted = status;
+    this._posted = (status == true) ? 1 : 0;
   }
 
   set setUrl(String url){
     this._redditURL = url;
   }
 
-}
+  Map<String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map['date'] = _date;
+    map['content'] = _content;
+    map['posted'] = _posted;
+    map['url'] = _redditURL;
+    return map;
+  }
 
+  Journal.fromMap(Map<String, dynamic> map){
+    if(map != null){
+      this._id = map['id'];
+      this._date = map['date'];
+      this._content = map['content'];
+      this._posted = map['posted'];
+      this._redditURL = map['url'];
+    }
+  }
+
+}
 
 
 /*
@@ -210,7 +241,9 @@ class Feelings{
 
   Feelings();
 
-  Feelings.Data(this._id, this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry);
+  Feelings.Data(this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry);
+
+  int get id => _id;
 
   String get date => _date;
 
@@ -225,6 +258,12 @@ class Feelings{
   int get frustrated => _frustrated;
 
   int get angry => _angry;
+
+  set id(int i){
+    if(i > 0){
+      this._id = i;
+    }
+  }
 
   set date(String date){
     if(date.length != 10){
@@ -256,6 +295,32 @@ class Feelings{
   set angry(int a) {
     this._angry = a;
   }
+
+  Map<String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map['date'] = _date;
+    map['happy'] = _happy;
+    map['sad'] = _sad;
+    map['anxious'] = _anxious;
+    map['frustrated'] = _frustrated;
+    map['angry'] = _angry;
+    map['craving'] = _craving;
+
+    return map;
+  }
+
+  Feelings.fromMap(Map<String, dynamic> map){
+    if(map != null){
+      this._date = map['date'];
+      this._happy = map['happy'];
+      this._sad = map['sad'];
+      this._anxious = map['anxious'];
+      this._frustrated = map['frustrated'];
+      this._angry = map['angry'];
+      this._craving = map['craving'];
+    }
+  }
+
 }
 
 /*
@@ -270,11 +335,19 @@ class CheckInData{
 
   CheckInData();
 
-  CheckInData.Data(this._id, this._date, this._checkin);
+  CheckInData.Data(this._date, this._checkin);
+
+  int get id => _id;
 
   String get date => _date;
 
   bool get checkin => _checkin;
+
+  set id(int i){
+    if(i > 0){
+      this._id = i;
+    }
+  }
 
   set date(String date){
     if(date.length != 10){
@@ -285,6 +358,19 @@ class CheckInData{
 
   set checkIn(bool status){
     this._checkin = status;
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map['date'] = _date;
+    map['checkin'] = (_checkin == true) ? 1 : 0;
+    return map;
+  }
+
+  CheckInData.fromMap(Map<String, dynamic> map){
+    this._id = map['id'];
+    this._date = map['date'];
+    this._checkin = map['checkin'];
   }
 }
 
@@ -297,14 +383,14 @@ class CheckInData{
 * money: how much they want to save
 * */
 class Goal{
-  int _id;
-  String _title;
   /*
   * 3 types of goals:
   * 1. Duration. I want to make it to [date] without consuming
   * 2. Time. I want to not smoke [quantity] [method]
   * 3. Money. I want to save [money]
   * */
+  int _id;
+  String _title;
   String _goalType;
   String _consumptionMethod;
   int _goalConsumptionAmount;
@@ -312,7 +398,9 @@ class Goal{
 
   Goal();
 
-  Goal.Data(this._id, this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
+  Goal.Data(this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
+
+  int get id => _id;
 
   String get title => _title;
 
@@ -323,6 +411,12 @@ class Goal{
   int get goalAmount => _goalConsumptionAmount;
 
   double get goalMoney => _goalMoney;
+
+  set id(int i){
+    if(i > 0){
+      this._id = i;
+    }
+  }
 
   set title(String title){
     if(title.length == 0){
@@ -345,6 +439,25 @@ class Goal{
 
   set goalMoney(double money){
     this._goalMoney = money;
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = Map<String, dynamic>();
+    map['id'] = this._id;
+    map['title'] = this._title;
+    map['goalType'] = this._goalType;
+    map['consumptionMethod'] = this._goalType;
+    map['goalAmount'] = this._goalConsumptionAmount;
+    map['goalSaved'] = this._goalMoney;
+  }
+
+  Goal.fromMap(Map<String, dynamic> map){
+    this._id = map['id'];
+    this._title = map['title'];
+    this._goalType = map['goalType'];
+    this._consumptionMethod = map['consumptionMethod'];
+    this._goalConsumptionAmount = map['goalAmount'];
+    this._goalMoney = map['goalSaved'];
   }
 }
 
@@ -377,17 +490,44 @@ class SqlitedbHelper {
               'consumptionMethod TEXT, '
               'consumptionAmount INTEGER, '
               'consumptionExpense REAL) ');
+          await db.execute('CREATE TABLE journal('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'date TEXT, '
+              'content TEXT, '
+              'posted INTEGER, '
+              'url TEXT)');
+          await db.execute('CREATE TABLE feeling('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'date TEXT, '
+              'happy INTEGER, '
+              'sad INTEGER, '
+              'anxious INTEGER, '
+              'frustrated INTEGER, '
+              'angry INTEGER, '
+              'craving INTEGER)');
+          await db.execute('CREATE TABLE checkin('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'date TEXT, '
+              'checkin INTEGER)');
+          await db.execute('CREATE TABLE goal('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'title TEXT, '
+              'goaltype TEXT, '
+              'consumptionMethod TEXT, '
+              'goalAmount INTEGER, '
+              'goalSaved REAL)');
         }
     );
   }
 
-//Retrieve
-
+/*
+* Retrieval methods
+* */
   Future<User> getUser() async{
     final db = await database;
     try {
       var user = await db.rawQuery("SELECT * FROM user WHERE id = 1");
-      if (user.length > 0) {
+      if (user.length > 0 && user != null) {
         return new User.fromMap(user.first);
       }
     } catch (e){
@@ -396,35 +536,228 @@ class SqlitedbHelper {
     return null;
   }
 
-//Insert User
+  Future<List> getJournal() async{
+    final db = await database;
+    try{
+      var entries = await db.query('journal');
+      return entries.toList();
+    } catch (e){
+      print("Error getting journal entries: " + e.toString());
+    }
+    return null;
+  }
+
+  Future<List> getFeelings(String date) async{
+    final db = await database;
+    try{
+      List<Feelings> feels = new List<Feelings>();
+      var f = await db.query('feeling', where: 'date = ?', whereArgs: [date] );
+      return f.toList();
+    }catch (e){
+      print("Error getting feelings for $date:" + e.toString());
+    }
+    return null;
+  }
+
+  Future<CheckInData> getCheckin(String date) async{
+    final db = await database;
+    try{
+      var c = await db.query('checkin', where: 'date = ?', whereArgs: [date]);
+      if(c != null){
+        return new CheckInData.fromMap(c.first);
+      }
+    }catch (e){
+      print("Error getting check-in for $date:" + e.toString());
+    }
+    return null;
+
+  }
+
+  Future<List> getGoal() async{
+    final db = await database;
+    try{
+      List<Goal> list = new List<Goal>();
+      var goals = await db.query('goal');
+      return goals.toList();
+    }catch(e){
+      print("Error getting goals: " + e.toString());
+    }
+    return null;
+  }
+
+/*
+* Insert methods
+* */
 
   Future<bool> insertUser(User user) async{
     final db = await database;
     try {
-      user._id = await db.insert('user', user.toMap());
-    } catch (e){
-      print("Error inserting into database: " + e);
-      return false;
-    }
-    return true;
-  }
-
-// Update User
-
-
-//Delete
-  Future<bool> deleteUser() async{
-    final db = await database;
-    try{
-      await db.rawDelete('DELETE FROM user WHERE id = 1');
+      user.id = await db.insert('user', user.toMap());
       return true;
     } catch (e){
-      print("Unable to delete user: " + e);
+      print("Error inserting user into database: " + e.toString());
     }
     return false;
   }
 
+  Future<bool> insertJournal(Journal entry) async{
+    final db = await database;
+    try{
+      entry.id = await db.insert('journal', entry.toMap());
+      return true;
+    } catch (e){
+      print("Error inserting into journal entry into database: " + e.toString());
+    }
+    return false;
+  }
 
+  Future<bool> insertFeeling(Feelings feels) async{
+    final db = await database;
+    try{
+      // If it already exists, update instead.
+      // var temp = getFeelings(feels.date);
+      // if(temp != null){
+      //   return updateFeeling(feels);
+      // }
+      if(feels != null){
+
+        feels.id = await db.insert('feeling', feels.toMap());
+        return true;
+      }
+    } catch (e){
+      print("Error inserting feeling into database: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> insertCheckin(CheckInData check) async{
+    final db = await database;
+    try {
+      check.id = await db.insert('checkin', check.toMap());
+      return true;
+    } catch (e){
+      print("Error inserting check-in into database: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> insertGoal(Goal goal) async{
+    final db = await database;
+    try{
+      goal.id = await db.insert('goal', goal.toMap());
+      return true;
+    }catch(e){
+      print("Unable to insert goal into database: " + e.toString());
+
+    }
+  }
+
+  /*
+  * Update methods
+  * */
+  Future<bool> updateUser(User user) async{
+    final db = await database;
+    try{
+      await db.update('user', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
+      print(await db.query('user'));
+      return true;
+    } catch (e){
+      print("Error updating user: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> updateJournal(Journal entry) async{
+    final db = await database;
+    try{
+      await db.update('journal', entry.toMap(), where: 'id = ?', whereArgs: [entry.id]);
+      print(await db.query('journal'));
+      return true;
+    } catch (e){
+      print("Error updating journal: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> updateFeeling(Feelings feels) async{
+    final db = await database;
+    try{
+      await db.update('feeling', feels.toMap(), where: 'date = ?', whereArgs: [feels.date]);
+      return true;
+    } catch(e){
+      print("Error updating feeling: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> updateCheckin(CheckInData check) async{
+    final db = await database;
+    try{
+      await db.update('checkin', check.toMap(), where: 'date = ?', whereArgs: [check.date]);
+      return true;
+    } catch (e){
+      print("Error updating check-in: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> updateGoal(Goal goal) async{
+    final db = await database;
+    try{
+      await db.update('goal', goal.toMap(), where: 'id = ?', whereArgs: [goal.id]);
+      return true;
+    } catch (e){
+      print("Error updating check-in: " + e.toString());
+    }
+    return false;
+  }
+
+/*
+* Delete methods
+* */
+  Future<bool> deleteUser() async{
+    final db = await database;
+    try{
+      await db.delete('user', where: 'id = ?', whereArgs: [1]);
+      return true;
+    } catch (e){
+      print("Unable to delete user: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> deleteJournalEntry(Journal entry) async{
+    final db = await database;
+    try{
+      await db.delete('journal', where: 'id = ?', whereArgs: [entry.id]);
+      return true;
+    } catch (e){
+      print("Unable to delete journal entry: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> deleteFeeling(Feelings feels) async{
+    final db = await database;
+    try{
+      await db.delete('feeling', where: 'date = ?', whereArgs: [feels.date]);
+      return true;
+    } catch(e){
+      print("Unable to delete feeling: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> deleteGoal(Goal goal) async{
+    final db = await database;
+    try{
+      await db.delete('goal', where: 'id = ?', whereArgs: [goal.id]);
+      return true;
+    } catch(e){
+      print("Unable to delete goal: " + e.toString());
+    }
+    return false;
+  }
 
 
 }
