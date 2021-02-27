@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releave_app/lib.dart';
 
 
 //a page (or route in flutter terminology) containing a consumption tracker
@@ -24,6 +25,7 @@ class ConsumptionTrackerState extends State<ConsumptionTrackerMain> {
   Widget build(BuildContext context) {
     //
     return Scaffold(
+      drawer: Sidebar(),
       appBar: AppBar(
         title: Text('Consumption Tracker'),
       ),
