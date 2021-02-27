@@ -28,7 +28,7 @@ class User {
 
   User();
 
-  User.data(this._id, this._firstName, this._lastName, this._birthdate, this._startdate,  [this._username]);
+  User.data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._username]);
 
   User.consumption(this._consumptionMethod, this._amount, this._money);
 
@@ -445,7 +445,7 @@ class Goal{
     var map = Map<String, dynamic>();
     map['id'] = this._id;
     map['title'] = this._title;
-    map['goalType'] = this._goalType;
+    map['goaltype'] = this._goalType;
     map['consumptionMethod'] = this._goalType;
     map['goalAmount'] = this._goalConsumptionAmount;
     map['goalSaved'] = this._goalMoney;
@@ -454,7 +454,7 @@ class Goal{
   Goal.fromMap(Map<String, dynamic> map){
     this._id = map['id'];
     this._title = map['title'];
-    this._goalType = map['goalType'];
+    this._goalType = map['goaltype'];
     this._consumptionMethod = map['consumptionMethod'];
     this._goalConsumptionAmount = map['goalAmount'];
     this._goalMoney = map['goalSaved'];
