@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:releave_app/lib.dart';
 
 // ignore: camel_case_types
 class CheckInMain extends StatelessWidget {
@@ -22,8 +23,6 @@ class CheckIn extends StatefulWidget {
   final String title;
   @override
   _CheckInState createState() => _CheckInState();
-
-
 }
 
 class _CheckInState extends State<CheckIn> {
@@ -31,14 +30,12 @@ class _CheckInState extends State<CheckIn> {
   double rating;
   bool abstained = false;
   final logController = TextEditingController();
-
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     logController.dispose();
     super.dispose();
   }
-
 
   Widget rateBar() {
     return RatingBar.builder(
@@ -66,6 +63,7 @@ class _CheckInState extends State<CheckIn> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
       ),

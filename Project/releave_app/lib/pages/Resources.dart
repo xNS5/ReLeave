@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:releave_app/lib.dart';
 
-// ignore: camel_case_types
-class resourcesMain extends StatelessWidget {
+class ResourcesMain extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -11,23 +11,23 @@ class resourcesMain extends StatelessWidget {
         primarySwatch: Colors.blueGrey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Resources(title: 'Resources'),
+      home: Resource(title: 'Resources'),
     );
   }
 }
 
-class Resources extends StatefulWidget {
-  Resources({Key key, this.title}) : super(key: key);
+class Resource extends StatefulWidget {
+  Resource ({Key key, this.title}) : super(key: key);
   final String title;
   @override
-  _ResourceState createState() => _ResourceState();
-
+  _ResourcesState createState() => _ResourcesState();
 }
 
-class _ResourceState extends State<Resources> {
+class _ResourcesState extends State<Resource> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
       ),
