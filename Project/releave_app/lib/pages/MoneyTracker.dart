@@ -12,6 +12,8 @@ class MoneyTrackerState extends State<MoneyTrackerMain> {
   double savedMoney = 0;
   double target = 50; //example
   double progress = 0;
+  final targetFieldController = TextEditingController();
+  final avgSavingsFieldController = TextEditingController();
 
   @override
   void initState()
@@ -46,6 +48,7 @@ class MoneyTrackerState extends State<MoneyTrackerMain> {
 
             //if avg spending and/or target savings are not in the DB, app should prompt user to input values
             TextField(
+              controller: targetFieldController,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Savings Goal'
@@ -61,6 +64,7 @@ class MoneyTrackerState extends State<MoneyTrackerMain> {
               child: Text('Save')
             ),
             TextField(
+              controller: avgSavingsFieldController,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Average Daily Spending'
