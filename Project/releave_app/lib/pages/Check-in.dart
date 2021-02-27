@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:releave_app/lib.dart';
 
 // ignore: camel_case_types
 class CheckInMain extends StatelessWidget {
@@ -66,6 +65,9 @@ class _CheckInState extends State<CheckIn> {
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(
