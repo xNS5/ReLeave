@@ -1,41 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:releave_app/lib.dart';
-import 'package:sqflite/sqflite.dart';
 
-void main() {
-  runApp(Home());
-}
-
-class Home extends StatelessWidget {
+class NotesMain extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    User user = new User.data("Michael", "Kennedy", "11/06/1997", "1/01/2021", "ReLeave-Dev");
-    SqlitedbHelper.db.insertUser(user).then((status){
-      if(status){
-        print("User inserted into database");
-      }
-    });
-
     return MaterialApp(
       title: 'ReLeave',
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomePage(title: 'ReLeave'),
+      home: Note(title: 'Notes'),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+class Note extends StatefulWidget {
+  Note({Key key, this.title}) : super(key: key);
   final String title;
-
   @override
-  _HomeState createState() => _HomeState();
+  _NoteState createState() => _NoteState();
+
 }
 
-class _HomeState extends State<HomePage>{
+class _NoteState extends State<Note> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +37,6 @@ class _HomeState extends State<HomePage>{
           mainAxisAlignment: MainAxisAlignment.center,
         ),
       ),
-    );
+    );// This trailing comma makes auto-formatting nicer for build methods.
   }
 }
