@@ -592,7 +592,7 @@ class SqlitedbHelper {
   Future<bool> insertUser(User user) async{
     final db = await database;
     try {
-      user.id = await db.insert('user', user.toMap());
+      user.id = await db.insert('user', user.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     } catch (e){
       print("Error inserting user into database: " + e.toString());
@@ -648,8 +648,8 @@ class SqlitedbHelper {
       return true;
     }catch(e){
       print("Unable to insert goal into database: " + e.toString());
-
     }
+    return false;
   }
 
   /*

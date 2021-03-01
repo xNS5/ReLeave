@@ -4,6 +4,26 @@ import 'package:releave_app/lib.dart';
 
 // ignore: camel_case_types
 class CheckInMain extends StatelessWidget {
+
+  int pullUser(){
+    DateTime start, today;
+    int difference = 0;
+    SqlitedbHelper.db.getUser().then((user){
+      if(user != null){
+        try{
+          print("User pulled from database: " + user.toMap().toString());
+          start = DateTime.parse(user.startDate);
+          today = new DateTime.now();
+          difference = today.difference(start).inDays;
+        } catch(e){
+          print("Error with DateTime: " + e.toString());
+        }
+      }
+    });
+    print(difference);
+    return difference;
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

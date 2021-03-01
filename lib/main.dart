@@ -9,13 +9,12 @@ void main() {
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    User user = new User.data("Michael", "Kennedy", "11/06/1997", "1/01/2021", "ReLeave-Dev");
+    User user = new User.data("Michael", "Kennedy", "11/06/1997", "2021-01-01", "ReLeave-Dev");
     SqlitedbHelper.db.insertUser(user).then((status){
       if(status){
         print("User inserted into database");
       }
     });
-
     return MaterialApp(
       title: 'ReLeave',
       theme: ThemeData(
