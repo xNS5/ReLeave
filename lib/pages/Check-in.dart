@@ -108,7 +108,6 @@ class _CheckInState extends State<CheckIn> {
               scale: 2.0,
               child: Checkbox(
                   value: this.abstained,
-
                   onChanged: (bool value) {
                     setState(() {
                       this.abstained = value;

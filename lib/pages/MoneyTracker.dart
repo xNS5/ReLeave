@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:releave_app/lib.dart';
 
 //a page (or route in flutter terminology) containing a money tracker
 class MoneyTrackerMain extends StatefulWidget {
@@ -30,6 +31,9 @@ class MoneyTrackerState extends State<MoneyTrackerMain> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Money Tracker'),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

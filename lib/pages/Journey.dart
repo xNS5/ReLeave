@@ -31,6 +31,9 @@ class _PathState extends State<Path> {
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(
