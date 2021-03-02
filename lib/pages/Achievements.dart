@@ -33,6 +33,9 @@ class _AchievementState extends State<Achievement> {
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(

@@ -30,6 +30,9 @@ class _ResourcesState extends State<Resource> {
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(

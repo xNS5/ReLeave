@@ -28,6 +28,9 @@ class ConsumptionTrackerState extends State<ConsumptionTrackerMain> {
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text('Consumption Tracker'),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         // Center is a layout widget. It takes a single child and positions it

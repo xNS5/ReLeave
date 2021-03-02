@@ -31,6 +31,9 @@ class _NoteState extends State<Note> {
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(

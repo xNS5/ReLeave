@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:releave_app/lib.dart';
 
 /*
@@ -29,16 +31,33 @@ class SobrietyCounter extends StatefulWidget {
 
 
 class _SobrietyCounterState extends State<SobrietyCounter> {
-  String soberCount = "Unset";
+  Timer timer;
+  String soberCount = "";
+  DateTime start, today;
+  int difference = 0;
 
-  setCount(int newCount) {
-    setState(() {
-      soberCount = newCount.toString();
+  void refresh() {
+    SqlitedbHelper.db.getUser().then((user) {
+      if (user.firstName != null) {
+        try {
+          today = new DateTime.now();
+          start = new DateFormat("yyyy-mm-dd").parse(user.startDate);
+          difference = today
+              .difference(start)
+              .inDays;
+        } catch (e) {
+          print("Sober Counter: Error with DateTime: " + e.toString());
+        }
+      }
+        setState(() {
+          soberCount = difference.toString();
+        });
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) => refresh());
     // This is an example. The "setCount()" function will be called when it reads
     // from the database to appropriately set the number of sober days.
     // setCount(1);
@@ -50,7 +69,4 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
       ),
     )));
   }
-
-
-
 }
