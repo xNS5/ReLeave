@@ -54,9 +54,10 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
         });
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    timer = Timer.periodic(Duration(seconds: 5), (Timer t) => refresh());
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) => refresh());
     // This is an example. The "setCount()" function will be called when it reads
     // from the database to appropriately set the number of sober days.
     // setCount(1);

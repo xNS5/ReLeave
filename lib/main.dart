@@ -41,6 +41,9 @@ class _HomeState extends State<HomePage>{
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          SobrietyCounter(),
+        ],
       ),
       body: Center(
         child: Column(
