@@ -36,6 +36,16 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
   DateTime start, today;
   int difference = 0;
 
+  // THIS IS HOW YOU PULL FROM DB
+  /*
+  You must have library file included at the top (lib.dart)
+  Then you can make DB queries
+  Be careful that all datetimes are in the same format or there will be errors
+
+  for more db methods, check db.dart, look here for how to insert data
+  example of insertion in main.dart, user insertion. lines 12-17.
+
+   */
   void refresh() {
     SqlitedbHelper.db.getUser().then((user) {
       if (user.firstName != null) {
@@ -57,7 +67,8 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
 
   @override
   Widget build(BuildContext context) {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) => refresh());
+    Future.delayed(Duration.zero, () => refresh());
+    //timer = Timer.periodic(Duration(seconds: 1), (Timer t) => refresh());
     // This is an example. The "setCount()" function will be called when it reads
     // from the database to appropriately set the number of sober days.
     // setCount(1);

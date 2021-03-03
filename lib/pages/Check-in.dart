@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:releave_app/lib.dart';
 
+
+class CheckInPassData {
+  final Map feelings;
+  final bool abstained;
+  CheckInPassData(this.feelings, this.abstained);
+}
+
+
 // ignore: camel_case_types
 class CheckInMain extends StatelessWidget {
 
@@ -47,7 +55,7 @@ class CheckIn extends StatefulWidget {
 
 class _CheckInState extends State<CheckIn> {
   @override
-  double rating;
+  var feelings = {"Happy": 50.0, "Sad": 50.0, "Anxious": 50.0, "Craving": 50.0, "Frustration": 50.0, "Angry": 50.0, "Lonely": 50.0};
   bool abstained = false;
   final logController = TextEditingController();
   @override
@@ -57,27 +65,70 @@ class _CheckInState extends State<CheckIn> {
     super.dispose();
   }
 
-  Widget rateBar() {
-    return RatingBar.builder(
-      initialRating: 2.5,
-      minRating: 0,
-      direction: Axis.horizontal,
-      allowHalfRating: true,
-      unratedColor: Colors.amber.withAlpha(50),
-      itemCount: 5,
-      itemSize: 50.0,
-      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-      itemBuilder: (context, _) => Icon(
-        Icons.star,
-        color: Colors.amber,
+  Widget noteField() {
+    return Expanded(
+      child: TextField(
+        controller: logController,
+        minLines: null,
+        maxLines: null,
+        expands: true,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Record some thoughts',
+        ),
       ),
-      onRatingUpdate: (rate) {
-        setState(() {
-          rating = rate;
-        });
-      },
-      updateOnDrag: true,
     );
+  }
+
+  Widget feelingSlider(fName, activeColor, inactiveColor,tColor, oColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+          child: Text(fName, textAlign: TextAlign.left,),
+        ),
+        SliderTheme(
+          data: sThemeData(activeColor, inactiveColor,tColor, oColor),
+          child: Slider(
+            min: 0,
+            max: 100,
+            value: feelings[fName],
+            onChanged: (value) {
+              setState(() {
+                feelings[fName] = value;
+              });
+            },
+          ),
+        ),
+    ],);
+  }
+
+  SliderThemeData sThemeData(activeColor, inactiveColor,tColor, oColor) {
+    return SliderTheme.of(context).copyWith(
+      activeTrackColor: activeColor,
+      inactiveTrackColor: inactiveColor,
+      trackShape: RectangularSliderTrackShape(),
+      trackHeight: 4.0,
+      thumbColor: tColor,
+      thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.0),
+      overlayColor: oColor,
+      overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
+    );
+  }
+
+  Widget allSliders() {
+    return Expanded(child: Container(child: Column(
+        children: <Widget>[
+          feelingSlider("Happy", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+          feelingSlider("Sad", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+          feelingSlider("Anxious", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+          feelingSlider("Craving", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+          feelingSlider("Frustration", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+          feelingSlider("Angry", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+          feelingSlider("Lonely", Colors.blue[700], Colors.blue[100], Colors.blueAccent, Colors.blue.withAlpha(32)),
+        ],
+    )));
   }
 
 
@@ -94,14 +145,12 @@ class _CheckInState extends State<CheckIn> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // SizedBox(
-            //   height: 40.0,
-            // ),
+            SizedBox(height: 10),
             Text(
               "Did you refrain from using cannabis?",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 20,
               ),
             ),
             Transform.scale(
@@ -115,45 +164,28 @@ class _CheckInState extends State<CheckIn> {
                   }
               ),
             ),
-            SizedBox(height: 40),
+            SizedBox(height: 10),
             Text(
                 "How are you feeling?",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: 20,
                 ),
             ),
-            rateBar(),
-            Expanded(
-                child: TextField(
-                  controller: logController,
-                  minLines: null,
-                  maxLines: null,
-                  expands: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Record some thoughts',
-                  ),
-                ),
-            ),
+            SizedBox(height: 10),
+            allSliders(),
             FloatingActionButton(
               // When the user presses the button, show an alert dialog containing the
               // text that the user has entered into the text field.
-              onPressed: () {
-                return showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      // Retrieve the text the user has entered by using the
-                      // TextEditingController.
-                      content: Text("Normally, this would submit. For now, I will demo that it can retrieve the recorded data.\n\nabstained: " + abstained.toString() + "\n\nlog:\n" + logController.text + "\n\nrating: " + rating.toString() + "/5"),
-                    );
-                  },
-                );
-              },
-              tooltip: 'Check in!',
+              onPressed: () => {Navigator.push(context, MaterialPageRoute(
+                builder: (context) => CheckInLogMain(),
+                settings: RouteSettings(
+                  arguments: CheckInPassData(feelings, abstained)
+              )))},
+              tooltip: 'Next step',
               child: Icon(Icons.arrow_forward),
             ),
+            SizedBox(height: 20),
           ],
         ),
       ),
