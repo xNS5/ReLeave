@@ -386,7 +386,7 @@ class Goal{
   /*
   * 3 types of goals:
   * 1. Duration. I want to make it to [date] without consuming
-  * 2. Time. I want to not smoke [quantity] [method]
+  * 2. Quantity. I want to not smoke [quantity] [method]
   * 3. Money. I want to save [money]
   * */
   int _id;
@@ -461,6 +461,74 @@ class Goal{
   }
 }
 
+class AchievementData{
+  int _id;
+  String _date;
+  String _goalType;
+  String _title;
+  int _threshold;
+  int _achieved;
+
+  AchievementData();
+  AchievementData.Data(this._date, this._goalType, this._title, this._threshold, this._achieved);
+
+  String get date => _date;
+
+  String get goalType => _goalType;
+
+  String get title => _title;
+
+  int get threshold => _threshold;
+
+  bool get achieved => (_achieved == 1) ? true : false;
+
+  set date(String date){
+    if(date.length == 10){
+      this._date = date;
+    }
+  }
+
+  set goalType(String type){
+    if(type.length > 0){
+      this._goalType = type;
+    }
+  }
+
+  set title(String title){
+    if(title.length > 0){
+      this._title = title;
+    }
+  }
+
+  set threshold(int threshold){
+    this._threshold = threshold;
+  }
+
+  set achieved(bool status){
+      this._achieved = (status == true) ? 1 : 0;
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = new Map<String, dynamic>();
+    map['id'] = this._id;
+    map['date'] = this._date;
+    map['goaltype'] = this._goalType;
+    map['title'] = this._title;
+    map['threshold'] = this._threshold;
+    map['achieved'] = this._achieved;
+  }
+
+  AchievementData.fromMap(Map<String, dynamic> map){
+    this._id = map['id'];
+    this._date = map['date'];
+    this._goalType = map['goaltype'];
+    this._title = map['title'];
+    this._threshold = map['threshold'];
+    this._achieved = map['achieved'];
+  }
+
+}
+
 
 class SqlitedbHelper {
   SqlitedbHelper._();
@@ -516,6 +584,13 @@ class SqlitedbHelper {
               'consumptionMethod TEXT, '
               'goalAmount INTEGER, '
               'goalSaved REAL)');
+          await db.execute('CREATE TABLE achievement('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'date TEXT, '
+              'goaltype TEXT, '
+              'title TEXT, '
+              'threshold INTEGER'
+              'achieved INTEGER)');
         }
     );
   }
@@ -524,13 +599,11 @@ class SqlitedbHelper {
 * Retrieval methods
 * */
   Future<User> getUser() async{
-    final db = await database;
     try {
+      final db = await database;
       var user = await db.rawQuery("SELECT * FROM user WHERE id = 1");
-      if (user.length > 0 && user != null) {
-        return new User.fromMap(user.first);
-      }
-    } catch (e){
+      return new User.fromMap(user.first);
+    }catch (e){
       print("Error getting user from database: "+ e);
     }
     return null;
@@ -550,7 +623,6 @@ class SqlitedbHelper {
   Future<List> getFeelings(String date) async{
     final db = await database;
     try{
-      List<Feelings> feels = new List<Feelings>();
       var f = await db.query('feeling', where: 'date = ?', whereArgs: [date] );
       return f.toList();
     }catch (e){
@@ -758,8 +830,6 @@ class SqlitedbHelper {
     }
     return false;
   }
-
-
 }
 
 
