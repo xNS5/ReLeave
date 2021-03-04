@@ -3,6 +3,7 @@ library lib;
 export 'db.dart';
 export 'pages/Achievements.dart';
 export 'pages/Check-in.dart';
+export 'pages/CheckInLog.dart';
 export 'pages/Goals.dart';
 export 'pages/Journey.dart';
 export 'pages/Notes.dart';
