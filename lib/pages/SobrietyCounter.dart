@@ -48,27 +48,24 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
    */
   void refresh() {
     SqlitedbHelper.db.getUser().then((user) {
-      if (user.firstName != null) {
+      if (user != null) {
         try {
           today = new DateTime.now();
           start = new DateFormat("yyyy-mm-dd").parse(user.startDate);
           difference = today
               .difference(start)
               .inDays;
+          soberCount = difference.toString();
         } catch (e) {
           print("Sober Counter: Error with DateTime: " + e.toString());
         }
       }
-        setState(() {
-          soberCount = difference.toString();
-        });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () => refresh());
-    //timer = Timer.periodic(Duration(seconds: 1), (Timer t) => refresh());
     // This is an example. The "setCount()" function will be called when it reads
     // from the database to appropriately set the number of sober days.
     // setCount(1);

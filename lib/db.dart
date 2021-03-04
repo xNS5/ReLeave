@@ -4,6 +4,7 @@ import 'package:releave_app/lib.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
+import 'package:sprintf/sprintf.dart';
 
 
 
@@ -386,7 +387,7 @@ class Goal{
   /*
   * 3 types of goals:
   * 1. Duration. I want to make it to [date] without consuming
-  * 2. Time. I want to not smoke [quantity] [method]
+  * 2. Quantity. I want to not smoke [quantity] [method]
   * 3. Money. I want to save [money]
   * */
   int _id;
@@ -461,6 +462,81 @@ class Goal{
   }
 }
 
+class AchievementData{
+  int _id;
+  String _date;
+  String _goalType;
+  String _title;
+  int _threshold;
+  int _achieved;
+
+  AchievementData();
+  AchievementData.Data(this._date, this._goalType, this._title, this._threshold, this._achieved);
+
+  int get id => _id;
+
+  String get date => _date;
+
+  String get goalType => _goalType;
+
+  String get title => _title;
+
+  int get threshold => _threshold;
+
+  bool get achieved => (_achieved == 1) ? true : false;
+
+  set id(int i){
+    if(i > 0){
+      this._id = i;
+    }
+  }
+
+  set date(String date){
+    if(date != null && date.length == 10)
+      this._date = date;
+  }
+
+  set goalType(String type){
+    if(type != null && type.length > 0){
+      this._goalType = type;
+    }
+  }
+
+  set title(String title){
+    if(title != null && title.length > 0){
+      this._title = title;
+    }
+  }
+
+  set threshold(int threshold){
+    this._threshold = threshold;
+  }
+
+  set achieved(bool status){
+      this._achieved = (status == true) ? 1 : 0;
+  }
+
+  Map<String, dynamic> toMap(){
+    var map = new Map<String, dynamic>();
+    map['id'] = this._id;
+    map['date'] = this._date;
+    map['goaltype'] = this._goalType;
+    map['title'] = this._title;
+    map['threshold'] = this._threshold;
+    map['achieved'] = this._achieved;
+  }
+
+  AchievementData.fromMap(Map<String, dynamic> map){
+    this._id = map['id'];
+    this._date = map['date'];
+    this._goalType = map['goaltype'];
+    this._title = map['title'];
+    this._threshold = map['threshold'];
+    this._achieved = map['achieved'];
+  }
+
+}
+
 
 class SqlitedbHelper {
   SqlitedbHelper._();
@@ -470,6 +546,45 @@ class SqlitedbHelper {
   Future<Database> get database async {
     if (_database == null) {
       _database = await _createDB();
+      // await _database.transaction((txn) async{
+      //   AchievementData a;
+      //   for(int i = 1; i < 5; i++) {
+      //     a = new AchievementData();
+      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "week" : "weeks")]);
+      //     a.date = null;
+      //     a.goalType = "duration";
+      //     a.threshold = i;
+      //     a._achieved = 0;
+      //     txn.insert('achievement', a.toMap());
+      //   }
+      //   for(int i = 1; i < 5; i++) {
+      //     a = new AchievementData();
+      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "year" : "years")]);
+      //     a.date = null;
+      //     a.goalType = "duration";
+      //     a.threshold = i;
+      //     a._achieved = 0;
+      //     txn.insert('achievement', a.toMap());
+      //   }
+      //   for(int i = 1; i < 5; i++) {
+      //     a = new AchievementData();
+      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "year" : "years")]);
+      //     a.date = null;
+      //     a.goalType = "duration";
+      //     a.threshold = i;
+      //     a._achieved = 0;
+      //     txn.insert('achievement', a.toMap());
+      //   }
+      //   for(int i = 0; i < 100; i++){
+      //     a = new AchievementData();
+      //     a.title = sprintf("Saved %i dollars", i * 100);
+      //     a.date = null;
+      //     a.goalType = "money";
+      //     a.threshold = i;
+      //     a._achieved = 0;
+      //     txn.insert('achievement', a.toMap());
+      //   }
+      // });
     }
     return _database;
   }
@@ -516,6 +631,13 @@ class SqlitedbHelper {
               'consumptionMethod TEXT, '
               'goalAmount INTEGER, '
               'goalSaved REAL)');
+          await db.execute('CREATE TABLE achievement('
+              'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+              'date TEXT, '
+              'goaltype TEXT, '
+              'title TEXT, '
+              'threshold INTEGER'
+              'achieved INTEGER)');
         }
     );
   }
@@ -524,14 +646,12 @@ class SqlitedbHelper {
 * Retrieval methods
 * */
   Future<User> getUser() async{
-    final db = await database;
     try {
+      final db = await database;
       var user = await db.rawQuery("SELECT * FROM user WHERE id = 1");
-      if (user.length > 0 && user != null) {
-        return new User.fromMap(user.first);
-      }
-    } catch (e){
-      print("Error getting user from database: "+ e);
+      return new User.fromMap(user.first);
+    }catch (e){
+      print("Error getting user from database: "+ e.toString());
     }
     return null;
   }
@@ -550,7 +670,6 @@ class SqlitedbHelper {
   Future<List> getFeelings(String date) async{
     final db = await database;
     try{
-      List<Feelings> feels = new List<Feelings>();
       var f = await db.query('feeling', where: 'date = ?', whereArgs: [date] );
       return f.toList();
     }catch (e){
@@ -585,6 +704,50 @@ class SqlitedbHelper {
     return null;
   }
 
+  Future<List> getAchievements() async{
+    try{
+      final db = await database;
+      var achievements = await db.query('achievement');
+      return achievements.toList();
+    } catch (e){
+      print("Error getting achievements: " + e.toString());
+    }
+    return null;
+  }
+
+  Future<List> getAchievementsType(String type) async{
+    try{
+      final db = await database;
+      var achievements = await db.query('achievement', where: 'goaltype = $type');
+      return achievements.toList();
+    } catch (e){
+      print("Error getting achievements by type $type: " + e.toString());
+    }
+    return null;
+  }
+
+  Future<List> getUnAchieved() async{
+    try{
+      final db = await database;
+      var achievements = await db.query('achievement', where: 'achieved = ?', whereArgs: [0]);
+      return achievements.toList();
+    } catch (e){
+      print("Error getting un-achieved: " + e.toString());
+    }
+    return null;
+  }
+
+  Future<List> getUnAchievedType(String type) async{
+    try{
+      final db = await database;
+      var achievements = await db.query('achievement', where: 'goaltype = $type AND achieved = ?', whereArgs: [0]);
+      return achievements.toList();
+    } catch (e){
+      print("Error getting un-achieved by type $type: " + e.toString());
+    }
+    return null;
+  }
+
 /*
 * Insert methods
 * */
@@ -612,16 +775,16 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertFeeling(Feelings feels) async{
-    final db = await database;
+
     try{
       // If it already exists, update instead.
       // var temp = getFeelings(feels.date);
       // if(temp != null){
       //   return updateFeeling(feels);
       // }
+      final db = await database;
       if(feels != null){
-
-        feels.id = await db.insert('feeling', feels.toMap());
+        feels.id = await db.insert('feeling', feels.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
         return true;
       }
     } catch (e){
@@ -631,8 +794,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertCheckin(CheckInData check) async{
-    final db = await database;
     try {
+      final db = await database;
       check.id = await db.insert('checkin', check.toMap());
       return true;
     } catch (e){
@@ -642,8 +805,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertGoal(Goal goal) async{
-    final db = await database;
     try{
+      final db = await database;
       goal.id = await db.insert('goal', goal.toMap());
       return true;
     }catch(e){
@@ -652,12 +815,24 @@ class SqlitedbHelper {
     return false;
   }
 
+  Future<bool> insertAchievement(AchievementData a) async{
+    try{
+      final db = await database;
+      a.id = await db.insert('achievement', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+      return true;
+    }catch(e){
+      print("Unable to insert goal into database: " + e.toString());
+    }
+    return false;
+  }
+
+
   /*
   * Update methods
   * */
   Future<bool> updateUser(User user) async{
-    final db = await database;
     try{
+      final db = await database;
       await db.update('user', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
       print(await db.query('user'));
       return true;
@@ -668,8 +843,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> updateJournal(Journal entry) async{
-    final db = await database;
     try{
+      final db = await database;
       await db.update('journal', entry.toMap(), where: 'id = ?', whereArgs: [entry.id]);
       print(await db.query('journal'));
       return true;
@@ -680,8 +855,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> updateFeeling(Feelings feels) async{
-    final db = await database;
     try{
+      final db = await database;
       await db.update('feeling', feels.toMap(), where: 'date = ?', whereArgs: [feels.date]);
       return true;
     } catch(e){
@@ -691,8 +866,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> updateCheckin(CheckInData check) async{
-    final db = await database;
     try{
+      final db = await database;
       await db.update('checkin', check.toMap(), where: 'date = ?', whereArgs: [check.date]);
       return true;
     } catch (e){
@@ -702,12 +877,23 @@ class SqlitedbHelper {
   }
 
   Future<bool> updateGoal(Goal goal) async{
-    final db = await database;
     try{
+      final db = await database;
       await db.update('goal', goal.toMap(), where: 'id = ?', whereArgs: [goal.id]);
       return true;
     } catch (e){
-      print("Error updating check-in: " + e.toString());
+      print("Error updating goal: " + e.toString());
+    }
+    return false;
+  }
+
+  Future<bool> updateAchievement(AchievementData achievement) async{
+    try{
+      final db = await database;
+      await db.update('achievement', achievement.toMap(), where: 'id = ?', whereArgs: [achievement.id]);
+      return true;
+    } catch (e){
+      print("Error updating goal: " + e.toString());
     }
     return false;
   }
@@ -758,8 +944,6 @@ class SqlitedbHelper {
     }
     return false;
   }
-
-
 }
 
 
