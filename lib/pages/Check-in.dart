@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:releave_app/lib.dart';
 
 
@@ -35,14 +34,7 @@ class CheckInMain extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ReLeave',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: CheckIn(title: 'Check In'),
-    );
+    return CheckIn(title: 'Check In');
   }
 }
 
@@ -54,31 +46,10 @@ class CheckIn extends StatefulWidget {
 }
 
 class _CheckInState extends State<CheckIn> {
-  @override
   var feelings = {"Happy": 50.0, "Sad": 50.0, "Anxious": 50.0, "Craving": 50.0, "Frustration": 50.0, "Angry": 50.0, "Lonely": 50.0};
   bool abstained = false;
-  final logController = TextEditingController();
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is disposed.
-    logController.dispose();
-    super.dispose();
-  }
 
-  Widget noteField() {
-    return Expanded(
-      child: TextField(
-        controller: logController,
-        minLines: null,
-        maxLines: null,
-        expands: true,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Record some thoughts',
-        ),
-      ),
-    );
-  }
+
 
   Widget feelingSlider(fName, activeColor, inactiveColor,tColor, oColor) {
     return Column(
@@ -192,6 +163,9 @@ class _CheckInState extends State<CheckIn> {
     );// This trailing comma makes auto-formatting nicer for build methods.
   }
 
-
-
 }
+
+
+
+
+

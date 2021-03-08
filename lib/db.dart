@@ -467,11 +467,13 @@ class AchievementData{
   String _date;
   String _goalType;
   String _title;
+  String _description;
   int _threshold;
   int _achieved;
+  String _iconName;
 
   AchievementData();
-  AchievementData.Data(this._date, this._goalType, this._title, this._threshold, this._achieved);
+  AchievementData.Data(this._date, this._goalType, this._title, this._description, this._threshold, this._achieved, this._iconName);
 
   int get id => _id;
 
@@ -481,9 +483,13 @@ class AchievementData{
 
   String get title => _title;
 
+  String get description => _description;
+
   int get threshold => _threshold;
 
   bool get achieved => (_achieved == 1) ? true : false;
+
+  String get iconName => _iconName;
 
   set id(int i){
     if(i > 0){
@@ -508,6 +514,12 @@ class AchievementData{
     }
   }
 
+  set description(String description){
+    if(description != null && description.length > 0){
+      this._description = description;
+    }
+  }
+
   set threshold(int threshold){
     this._threshold = threshold;
   }
@@ -516,14 +528,24 @@ class AchievementData{
       this._achieved = (status == true) ? 1 : 0;
   }
 
+  set iconName(String name){
+    if(name != null && name.length > 0){
+      this._iconName = name;
+    }
+  }
+
+
   Map<String, dynamic> toMap(){
     var map = new Map<String, dynamic>();
     map['id'] = this._id;
     map['date'] = this._date;
     map['goaltype'] = this._goalType;
     map['title'] = this._title;
+    map['description'] = this._description;
     map['threshold'] = this._threshold;
     map['achieved'] = this._achieved;
+    map['iconname'] = this._iconName;
+    return map;
   }
 
   AchievementData.fromMap(Map<String, dynamic> map){
@@ -531,8 +553,10 @@ class AchievementData{
     this._date = map['date'];
     this._goalType = map['goaltype'];
     this._title = map['title'];
+    this._description = map['description'];
     this._threshold = map['threshold'];
     this._achieved = map['achieved'];
+    this._iconName = map['iconname'];
   }
 
 }
@@ -636,8 +660,10 @@ class SqlitedbHelper {
               'date TEXT, '
               'goaltype TEXT, '
               'title TEXT, '
-              'threshold INTEGER'
-              'achieved INTEGER)');
+              'description TEXT, '
+              'threshold INTEGER, '
+              'achieved INTEGER, '
+              'iconname TEXT)');
         }
     );
   }
@@ -821,7 +847,7 @@ class SqlitedbHelper {
       a.id = await db.insert('achievement', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
-      print("Unable to insert goal into database: " + e.toString());
+      print("Unable to insert achievement into database: " + e.toString());
     }
     return false;
   }
