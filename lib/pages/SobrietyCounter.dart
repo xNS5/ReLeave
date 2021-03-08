@@ -55,11 +55,14 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
           difference = today
               .difference(start)
               .inDays;
-          soberCount = difference.toString();
+
         } catch (e) {
           print("Sober Counter: Error with DateTime: " + e.toString());
         }
       }
+    });
+    setState(() {
+      soberCount = difference.toString();
     });
   }
 
