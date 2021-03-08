@@ -570,45 +570,6 @@ class SqlitedbHelper {
   Future<Database> get database async {
     if (_database == null) {
       _database = await _createDB();
-      // await _database.transaction((txn) async{
-      //   AchievementData a;
-      //   for(int i = 1; i < 5; i++) {
-      //     a = new AchievementData();
-      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "week" : "weeks")]);
-      //     a.date = null;
-      //     a.goalType = "duration";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      //   for(int i = 1; i < 5; i++) {
-      //     a = new AchievementData();
-      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "year" : "years")]);
-      //     a.date = null;
-      //     a.goalType = "duration";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      //   for(int i = 1; i < 5; i++) {
-      //     a = new AchievementData();
-      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "year" : "years")]);
-      //     a.date = null;
-      //     a.goalType = "duration";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      //   for(int i = 0; i < 100; i++){
-      //     a = new AchievementData();
-      //     a.title = sprintf("Saved %i dollars", i * 100);
-      //     a.date = null;
-      //     a.goalType = "money";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      // });
     }
     return _database;
   }

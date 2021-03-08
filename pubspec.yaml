@@ -21,6 +21,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  dio: 3.0.1
+  oauth2: ^1.6.3
+  draw: 0.9.0
+  sprintf: ^4.0.0
   flutter:
     sdk: flutter
   sqflite: any
@@ -28,6 +32,7 @@ dependencies:
   intl: ^0.16.1
   flutter_rating_bar: ^3.2.0+1
   sprintf: ^5.0.0
+
 
 
   # The following adds the Cupertino Icons font to your application.
