@@ -47,9 +47,23 @@ class _HomeState extends State<HomePage>{
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
-      ),
-    );
+          // mainAxisAlignment: MainAxisAlignment.center,
+          // children: <Widget> [
+          //   RawMaterialButton(
+          //     onPressed: () {},
+          //     elevation: 2.0,
+          //     fillColor: Colors.lightBlue,
+          //     child: Icon(
+          //       Icons.circle,
+          //       size: 35.0,
+          //     ),
+          //     padding: EdgeInsets.all(15.0),
+          //     shape: CircleBorder(),
+          //   )
+          // ]
+
+            ),
+          )
+        );
   }
 }
