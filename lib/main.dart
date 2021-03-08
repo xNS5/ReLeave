@@ -46,22 +46,28 @@ class _HomeState extends State<HomePage>{
         ],
       ),
       body: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          // children: <Widget> [
-          //   RawMaterialButton(
-          //     onPressed: () {},
-          //     elevation: 2.0,
-          //     fillColor: Colors.lightBlue,
-          //     child: Icon(
-          //       Icons.circle,
-          //       size: 35.0,
-          //     ),
-          //     padding: EdgeInsets.all(15.0),
-          //     shape: CircleBorder(),
-          //   )
-          // ]
-
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          // direction: Axis.horizontal,
+          children: <Widget> [
+              RaisedButton(
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInLogMain()));},
+                color: Colors.blue,
+                splashColor: Colors.lightBlueAccent,
+                padding: EdgeInsets.fromLTRB(50, 50, 50, 50),
+                shape: CircleBorder(),
+                child: Text("Community\nCheck-In"),
+              ),
+             RaisedButton(
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInMain()));},
+                elevation: 5,
+                color: Colors.green,
+                splashColor: Colors.greenAccent,
+                padding: EdgeInsets.fromLTRB(50, 50, 50, 50),
+                shape: CircleBorder(),
+                child: Text("Personal\nCheck-In"),
+              ),
+          ]
             ),
           )
         );
