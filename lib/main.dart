@@ -46,10 +46,30 @@ class _HomeState extends State<HomePage>{
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-        ),
-      ),
-    );
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget> [
+              MaterialButton(
+                onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInLogMain()));},
+                child: Text("Community\nCheck-In"),
+                color: Colors.blue,
+                splashColor: Colors.lightBlueAccent,
+                textColor: Colors.white,
+                padding: EdgeInsets.fromLTRB(50, 50, 50, 50),
+                shape: CircleBorder(),
+              ),
+             MaterialButton(
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInMain()));},
+              child: Text("Personal\nCheck-In"),
+               color: Colors.green,
+               splashColor: Colors.lightGreenAccent,
+               textColor: Colors.white,
+               padding: EdgeInsets.fromLTRB(50, 50, 50, 50),
+               shape: CircleBorder(),
+              ),
+          ]
+            ),
+          )
+        );
   }
 }

@@ -49,8 +49,6 @@ class _CheckInState extends State<CheckIn> {
   var feelings = {"Happy": 50.0, "Sad": 50.0, "Anxious": 50.0, "Craving": 50.0, "Frustration": 50.0, "Angry": 50.0, "Lonely": 50.0};
   bool abstained = false;
 
-
-
   Widget feelingSlider(fName, activeColor, inactiveColor,tColor, oColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,6 +62,8 @@ class _CheckInState extends State<CheckIn> {
           child: Slider(
             min: 0,
             max: 100,
+            divisions: 10,
+            label: ((feelings[fName].round())/10).toString(),
             value: feelings[fName],
             onChanged: (value) {
               setState(() {
