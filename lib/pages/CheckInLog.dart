@@ -118,20 +118,20 @@ class _CheckInLogState extends State<CheckInLog> {
   }
 
   void submitCheckIn(abstained, feelings, note) {
-    print(note);
-    CheckInData ins_check = CheckInData.Data((new DateTime.now()).toString(), abstained);
+    var nowTime = (new DateTime.now()).toString();
+    CheckInData ins_check = CheckInData.Data(nowTime, abstained);
     SqlitedbHelper.db.insertCheckin(ins_check).then((status){
       if(status){
         print("CheckIn inserted into database");
       }
     });
-    Feelings ins_feels = Feelings.Data((new DateTime.now()).toString(), feelings["Happy"].toInt(), feelings["Sad"].toInt(), feelings["Anxious"].toInt(), feelings["Craving"].toInt(), feelings["Frustration"].toInt(), feelings["Angry"].toInt());
+    Feelings ins_feels = Feelings.Data(nowTime, feelings["Happy"].toInt(), feelings["Sad"].toInt(), feelings["Anxious"].toInt(), feelings["Craving"].toInt(), feelings["Frustration"].toInt(), feelings["Angry"].toInt());
     SqlitedbHelper.db.insertFeeling(ins_feels).then((status) {
       if (status) {
         print("Feelings inserted into database");
       }
     });
-    Journal ins_journal = Journal.Data(ins_check.id, (new DateTime.now()).toString(), note, 0, "");
+    Journal ins_journal = Journal.Data(ins_check.id, nowTime, note, 0, "");
     SqlitedbHelper.db.insertJournal(ins_journal).then((status) {
       if (status) {
         print("Journal inserted into database");
