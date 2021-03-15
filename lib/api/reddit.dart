@@ -1,22 +1,25 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:draw/draw.dart';
+import 'package:http/http.dart' as http;
+import 'package:oauth2/oauth2.dart';
+
 
 
 Future<void> main() async{
-  final userAgent = 'releave-test';
+  final userAgent = 'releave';
   final configUri = Uri.parse('draw.ini');
-  final reddit = Reddit.createInstalledFlowInstance(userAgent: userAgent,
-      configUri: configUri);
-  final auth_url = reddit.auth.url(['*'], 'foobar');
-  print(auth_url);
+  final reddit = await Reddit.createScriptInstance(
+    clientId: "UmwvVZB9ixzDEA",
+    clientSecret: "	2wgOJI0RW_RWAF72dBzblJ7mNLUNDw",
+    userAgent:  userAgent,
+    username: "releave-dev",
+    password: "EzgWf7Ym7d!@rX",
+  );
+  Redditor user = await reddit.user.me();
 
-try{
-  await reddit.auth.authorize("Y7zUyKlP6u6_T1PZdEJ89d0rVffm3Q");
-}catch(e){
-  print(e.toString());
-}
+  print(user.displayName);
 
-  print(await reddit.user.me());
+
+
 }
