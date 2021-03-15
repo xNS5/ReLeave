@@ -13,5 +13,6 @@ export 'pages/ConsumptionTracker.dart';
 export 'Sidebar/SidebarLayout.dart';
 export 'Sidebar/Sidebar.dart';
 export 'main.dart';
+export 'pages/RedditSubmission.dart';
 export 'package:sqflite/sqflite.dart';
-import 'package:flutter/material.dart';
+
