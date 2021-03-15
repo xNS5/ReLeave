@@ -1,10 +1,33 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:releave_app/lib.dart';
-import 'package:fialogs/fialogs.dart';
 
 class RedditSubmission extends StatelessWidget {
   TextEditingController title = new TextEditingController(),
       content = new TextEditingController();
+
+  Future<void> _showMyDialog(context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Posted!'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -34,19 +57,7 @@ class RedditSubmission extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 ElevatedButton.icon(
-                  onPressed: () => {
-                    [
-                    successDialog(context,
-                        "Posted to Reddit!",
-                        "",
-                      positiveButtonText: "OK",
-                      positiveButtonAction: () {
-                        Navigator.of(context).pop();
-                      },
-                      )
-                    // Navigator.of(context).pop(),
-                    // Navigator.of(context).pop(),
-                    ]},
+                  onPressed: () => _showMyDialog(context),
                   icon: Icon(Icons.send),
                   label: Text('Submit'),
                 ),
