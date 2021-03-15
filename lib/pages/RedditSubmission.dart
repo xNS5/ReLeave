@@ -2,7 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:releave_app/lib.dart';
 
-class RedditSubmission extends StatelessWidget {
+class RedditSubmission extends StatefulWidget {
+  const RedditSubmission ({Key key,}) : super(key: key);
+
+  @override
+    _SubmissionState createState() => _SubmissionState();
+}
+
+class _SubmissionState extends State<RedditSubmission>{
   TextEditingController title = new TextEditingController(),
       content = new TextEditingController();
 
@@ -44,30 +51,30 @@ class RedditSubmission extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: Transform.translate(
-          offset: Offset(0.0, -1 * MediaQuery.of(context).viewInsets.bottom),
-          child:BottomAppBar(
-            child: new Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget> [
-                ElevatedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: Icon(Icons.cancel_outlined),
-                    label: Text('Cancel')
-                ),
-                SizedBox(width: 10),
-                ElevatedButton.icon(
-                  onPressed: () => _showMyDialog(context),
-                  icon: Icon(Icons.send),
-                  label: Text('Submit'),
-                ),
-              ],
-            ),
-
+        offset: Offset(0.0, -1 * MediaQuery.of(context).viewInsets.bottom),
+        child:BottomAppBar(
+          child: new Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget> [
+              ElevatedButton.icon(
+                  onPressed: () => Navigator.of(context).pop(),
+                  icon: Icon(Icons.cancel_outlined),
+                  label: Text('Cancel')
+              ),
+              SizedBox(width: 10),
+              ElevatedButton.icon(
+                onPressed: () => _showMyDialog(context),
+                icon: Icon(Icons.send),
+                label: Text('Submit'),
+              ),
+            ],
           ),
+
+        ),
       ),
 
-        body: Column(
+      body: Column(
         children: [
           Container(
             margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -94,6 +101,7 @@ class RedditSubmission extends StatelessWidget {
       ),
     );
   }
+
 }
 
 
