@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:draw/draw.dart';
 
 
-void main(){
-
+void main() async{
+  Reddit reddit = await Reddit.createScriptInstance(
+  );
 }
