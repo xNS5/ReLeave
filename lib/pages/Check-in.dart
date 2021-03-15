@@ -118,7 +118,7 @@ class _CheckInState extends State<CheckIn> {
           children: <Widget>[
             SizedBox(height: 10),
             Text(
-              "Did you refrain from using cannabis?",
+              "Did you refrain from using cannabis today?",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
