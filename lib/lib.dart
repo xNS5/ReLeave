@@ -15,4 +15,7 @@ export 'Sidebar/Sidebar.dart';
 export 'main.dart';
 export 'pages/RedditSubmission.dart';
 export 'package:sqflite/sqflite.dart';
+export 'package:releave_app/api/LeavesPost.g.dart';
+export 'package:releave_app/models/PostModel.dart';
+
 
