@@ -573,9 +573,9 @@ class SqlitedbHelper {
     if (_database == null) {
 
       _database = await _createDB();
-      _setupAchievements(_database);
-      await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
-      await _database.execute("INSERT INTO 'releave.db'.achievement SELECT * FROM achData.achievement");
+      // _setupAchievements(_database);
+      // await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
+      // await _database.execute("INSERT INTO 'releave.db'.achievement SELECT * FROM achData.achievement");
     }
     return _database;
   }
