@@ -13,7 +13,7 @@ Future<List<Post>> LeavesPosts(int numPosts) async{
   final userAgent = 'releave';
   final reddit = await Reddit.createScriptInstance(
     clientId: "UmwvVZB9ixzDEA",
-    clientSecret: "	2wgOJI0RW_RWAF72dBzblJ7mNLUNDw",
+    clientSecret: "2wgOJI0RW_RWAF72dBzblJ7mNLUNDw",
     userAgent:  userAgent,
     username: "releave-dev",
     password: "EzgWf7Ym7d!@rX",
@@ -22,7 +22,6 @@ Future<List<Post>> LeavesPosts(int numPosts) async{
   List<Post> postRet = [];
   await reddit.subreddit("leaves").newest(limit:numPosts).toList().then((posts) {
     if(posts != null){
-      Post p;
         for(UserContent post in posts){
           postRet.add(new Post.fromJson(json.decode(post.toString())));
         }
