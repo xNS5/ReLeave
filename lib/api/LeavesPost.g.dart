@@ -5,7 +5,7 @@ import 'package:draw/draw.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart';
 import 'dart:convert';
-import 'package:releave_app/models/post.dart';
+import 'package:releave_app/models/PostModel.dart';
 
 
 
