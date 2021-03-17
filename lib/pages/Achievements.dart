@@ -63,12 +63,21 @@ class _AchievementState extends State<Achievement> {
           setState(() {
             this.achList = ach;
             this.hlAch = ach[0];
+            for (Map<String, dynamic> a in this.achList) {
+              if (a["achieved"] == 0) {
+                checkAchievementStatus(a);
+              }
+            }
           });
         } catch (e) {
           print("Read DB: Error retrieving achievements: " + e.toString());
         }
       }
     });
+  }
+
+  checkAchievementStatus(Map<String, dynamic> a) {
+
   }
 
   @override

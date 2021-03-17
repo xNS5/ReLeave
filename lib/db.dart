@@ -5,6 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:sprintf/sprintf.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
 
 
@@ -569,12 +571,69 @@ class SqlitedbHelper {
 
   Future<Database> get database async {
     if (_database == null) {
+
       _database = await _createDB();
+      _setupAchievements(_database);
+      await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
+      await _database.execute("INSERT INTO 'releave.db'.achievement SELECT * FROM achData.achievement");
     }
     return _database;
   }
 
+
+  Future<Database> _getAchDB(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+
+    } else {
+      print("Opening existing database");
+    }
+    // open the database
+    return await openDatabase(achPath, readOnly: true);
+  }
+
+
+  void _setupAchievements(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+      Database achDB = await openDatabase(achPath, readOnly: true);
+    }
+  }
+
   Future<Database> _createDB() async {
+
     String path = join((await getDatabasesPath()), "releave.db");
     return await openDatabase(
         path,
