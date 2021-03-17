@@ -23,30 +23,10 @@ class _NoteState extends State<Note> {
   bool descending = true;
   var sortedJournals = [];
 
+  @override
   void initState() {
-    SqlitedbHelper.db.getJournal().then((journal) {
-      if (journal != null) {
-        try {
-          setState(() {
-            var temp_array = [];
-            for (final j in journal) {
-              temp_array.add([j, j["date"]]);
-            }
-            temp_array.sort((a, b) {
-              var aDate = a[1];
-              var bDate = b[1];
-              if (descending) {
-                return bDate.compareTo(aDate);
-              }
-              return aDate.compareTo(bDate);
-            });
-            sortedJournals = temp_array;
-          });
-        } catch (e) {
-          print("Read DB: Error retrieving journals: " + e.toString());
-        }
-      }
-    });
+    super.initState();
+    pullJournal();
   }
 
 
@@ -101,5 +81,36 @@ class _NoteState extends State<Note> {
         )
     ));
   }
+
+  pullEntries() async{
+    SqlitedbHelper.db.getJournal().then((journal) {
+      if (journal != null) {
+        try {
+          setState(() {
+            var temp_array = [];
+            for (final j in journal) {
+              temp_array.add([j, j["date"]]);
+            }
+            temp_array.sort((a, b) {
+              var aDate = a[1];
+              var bDate = b[1];
+              if (descending) {
+                return bDate.compareTo(aDate);
+              }
+              return aDate.compareTo(bDate);
+            });
+            sortedJournals = temp_array;
+          });
+        } catch (e) {
+          print("Read DB: Error retrieving journals: " + e.toString());
+        }
+      }
+    });
+  }
+
+  pullJournal(){
+    pullEntries();
+  }
+
 
 }
