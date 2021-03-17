@@ -41,7 +41,9 @@ class _NoteViewState extends State<NoteView> {
   var feelings;
   List<BarChartModel> graphData = [];
 
+  @override
   void initState() {
+    super.initState();
     SqlitedbHelper.db.getFeelings(widget.journal["date"]).then((f) {
       if (f != null) {
         try {
