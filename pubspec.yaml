@@ -35,8 +35,7 @@ dependencies:
   pull_to_refresh: ^1.6.3
   english_words: any
   flutter_launcher_icons: ^0.8.0
-  fialogs: ^1.1.5
-
+  flutter_bloc: ^6.1.3
 
 flutter_icons:
   image_path: "assets/icons/ReLeave_icon.png"
