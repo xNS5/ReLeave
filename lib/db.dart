@@ -442,9 +442,6 @@ class Goal{
   }
 
   set title(String title){
-    if(title.length == 0){
-      this._title = " ";
-    }
     this._title = title;
   }
 
@@ -473,6 +470,7 @@ class Goal{
     map['consumptionMethod'] = this._goalType;
     map['goalAmount'] = this._goalConsumptionAmount;
     map['goalSaved'] = this._goalMoney;
+    return map;
   }
 
   Goal.fromMap(Map<String, dynamic> map){
@@ -593,7 +591,6 @@ class SqlitedbHelper {
 
   Future<Database> get database async {
     if (_database == null) {
-
       _database = await _createDB();
       // _setupAchievements(_database);
       // await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
@@ -845,9 +842,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertFeeling(Feelings feels) async{
-
+    final db = await database;
     try{
-      final db = await database;
       if(feels != null){
         feels.id = await db.insert('feeling', feels.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
         return true;
@@ -859,8 +855,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertCheckin(CheckInData check) async{
+    final db = await database;
     try {
-      final db = await database;
       check.id = await db.insert('checkin', check.toMap());
       return true;
     } catch (e){
@@ -870,9 +866,9 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertGoal(Goal goal) async{
+    final db = await database;
     try{
-      final db = await database;
-      goal.id = await db.insert('goal', goal.toMap(), conflictAlgorithm:  ConflictAlgorithm.replace);
+      goal.id = await db.insert('goal', goal.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
       print("Unable to insert goal into database: " + e.toString());
