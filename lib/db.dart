@@ -252,10 +252,12 @@ class Feelings{
   int _craving;
   int _frustrated;
   int _angry;
+  int _lonely;
+  int _abstained;
 
   Feelings();
 
-  Feelings.Data(this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry);
+  Feelings.Data(this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry, this._lonely, this._abstained);
 
   int get id => _id;
 
@@ -272,6 +274,10 @@ class Feelings{
   int get frustrated => _frustrated;
 
   int get angry => _angry;
+
+  int get lonely => _lonely;
+
+  bool get abstained => (_abstained == 1) ? true : false;
 
   set id(int i){
     if(i > 0){
@@ -310,6 +316,14 @@ class Feelings{
     this._angry = a;
   }
 
+  set lonely(int l) {
+    this._lonely = l;
+  }
+
+  set abstained (bool a){
+    this._abstained = (a == true) ? 1 : 0;
+  }
+
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
     map['date'] = _date;
@@ -319,7 +333,8 @@ class Feelings{
     map['frustrated'] = _frustrated;
     map['angry'] = _angry;
     map['craving'] = _craving;
-
+    map['lonely'] = _lonely;
+    map['abstained'] = _abstained;
     return map;
   }
 
@@ -332,6 +347,8 @@ class Feelings{
       this._frustrated = map['frustrated'];
       this._angry = map['angry'];
       this._craving = map['craving'];
+      this._lonely = map['lonely'];
+      this._abstained = map['abstained'];
     }
   }
 
@@ -683,7 +700,9 @@ class SqlitedbHelper {
               'anxious INTEGER, '
               'frustrated INTEGER, '
               'angry INTEGER, '
-              'craving INTEGER)');
+              'craving INTEGER, '
+              'lonely INTEGER, '
+              'abstained INTEGER)');
           await db.execute('CREATE TABLE checkin('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
               'date TEXT, '

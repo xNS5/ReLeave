@@ -122,7 +122,7 @@ class _CheckInLogState extends State<CheckInLog> {
               // When the user presses the button, show an alert dialog containing the
               // text that the user has entered into the text field.
               onPressed: () {
-                submitCheckIn(this.abstained, this.feelings, logController.text, titleController.text);
+                submitCheckIn(this.abstained, this.feelings, logController.text, titleController.text, this.abstained);
                 _confirmToast(context);
                 Navigator.pop(context);
                 Navigator.pop(context);
@@ -137,7 +137,7 @@ class _CheckInLogState extends State<CheckInLog> {
     );// This trailing comma makes auto-formatting nicer for build methods.
   }
 
-  void submitCheckIn(abstained, feelings, note, title) {
+  void submitCheckIn(abstained, feelings, note, title, abst) {
     var nowTime = (new DateTime.now()).toString();
     CheckInData ins_check = CheckInData.Data(nowTime, abstained);
     SqlitedbHelper.db.insertCheckin(ins_check).then((status){
@@ -145,7 +145,11 @@ class _CheckInLogState extends State<CheckInLog> {
         print("CheckIn inserted into database");
       }
     });
-    Feelings ins_feels = Feelings.Data(nowTime, feelings["Happy"].toInt(), feelings["Sad"].toInt(), feelings["Anxious"].toInt(), feelings["Craving"].toInt(), feelings["Frustration"].toInt(), feelings["Angry"].toInt());
+    int absInt = 0;
+    if (abst == true) {
+      absInt = 1;
+    }
+    Feelings ins_feels = Feelings.Data(nowTime, feelings["Happy"].toInt(), feelings["Sad"].toInt(), feelings["Anxious"].toInt(), feelings["Craving"].toInt(), feelings["Frustration"].toInt(), feelings["Angry"].toInt(), feelings["Lonely"].toInt(), absInt);
     SqlitedbHelper.db.insertFeeling(ins_feels).then((status) {
       if (status) {
         print("Feelings inserted into database");

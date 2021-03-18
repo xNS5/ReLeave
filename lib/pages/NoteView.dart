@@ -50,7 +50,7 @@ class _NoteViewState extends State<NoteView> {
           setState(() {
             if (f.length > 0) {
               this.feelings = f[0];
-              for (List e in [["happy", Colors.orangeAccent], ["sad", Colors.blueAccent], ["anxious", Colors.pinkAccent], ["frustrated", Colors.deepOrangeAccent], ["angry", Colors.red], ["craving", Colors.lightGreen]]) {
+              for (List e in [["happy", Colors.orangeAccent], ["sad", Colors.blueAccent], ["anxious", Colors.pinkAccent], ["frustrated", Colors.deepOrangeAccent], ["angry", Colors.red], ["craving", Colors.lightGreen], ["lonely", Colors.blueGrey]]) {
                 graphData.add(
                   BarChartModel(
                     emotion: e[0],
@@ -101,14 +101,15 @@ class _NoteViewState extends State<NoteView> {
                 Expanded(
                   flex:4,
                   child: Text(
-                    DateFormat("    (MM-dd-yyyy)").format(DateTime.parse(widget.journal["date"])).toString(),
+                    DateFormat("(MM-dd-yyyy)").format(DateTime.parse(widget.journal["date"])).toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 18.0),
                   ),
                 )
               ],
             ),),
-
+            SizedBox(height:10),
+            abstainedMessage(),
             SizedBox(height: 20),
             feelingGraph(),
             SizedBox(height: 20),
@@ -136,6 +137,19 @@ class _NoteViewState extends State<NoteView> {
     );
   }
 
+  Widget abstainedMessage() {
+    if (feelings == null || feelings.length == 0) {
+      return Text("");
+    }
+    else {
+      return Text(
+        "Abstained from using: " + feelings['abstained'].toString(),
+        style: TextStyle(
+          fontSize: 16,
+        ),
+      );
+    }
+  }
 
   Widget feelingGraph() {
     if (feelings == null || feelings.length == 0) {
