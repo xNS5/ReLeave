@@ -35,10 +35,6 @@ class Sidebar extends StatelessWidget {
               onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => Leaves()))},
             ),
             ListTile(
-              title: Text('Check-in (temp)'),
-              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInMain()))},
-            ),
-            ListTile(
               title: Text('Consumption Tracker'),
               onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => ConsumptionTrackerMain()))},
             ),
