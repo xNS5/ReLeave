@@ -6,6 +6,7 @@ import 'package:releave_app/lib.dart';
 class Leaves extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Post> leaves_posts = [];
     return MaterialApp(
       title: 'ReLeave',
       theme: ThemeData(
@@ -21,27 +22,60 @@ class Leaves extends StatelessWidget {
 class LeavesHome extends StatefulWidget {
   LeavesHome({Key key, this.title}) : super(key: key);
   final String title;
-  
+  // final Future<List<Post>> posts;
+
   @override
   _LeavesState createState() => _LeavesState();
 }
 
-class _LeavesState extends State<LeavesHome>{
+class _LeavesState extends State<LeavesHome> {
   // ignore: non_constant_identifier_names
-  static List<Post> leaves_posts = [];
   ScrollController _scrollController = new ScrollController();
+  List<Post> posts;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    fetch(10);
+    _fetch(10);
   }
 
   @override
-  void dispose(){
+  void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
+
+  Future<void> _fetch(int num) async {
+    try {
+       await LeavesPosts(num).then((subPosts) {
+        if (subPosts != null) {
+          posts = subPosts;
+        }
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  _onLoading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Loading"),
+            ],
+          ),
+        );
+      },
+    );
+    Navigator.pop(context); //pop dialog
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +90,7 @@ class _LeavesState extends State<LeavesHome>{
       ),
       body: ListView.builder(
         controller: _scrollController,
-        itemCount: leaves_posts.length,
+        itemCount: posts.length,
         itemBuilder: (BuildContext context, int index) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,12 +106,12 @@ class _LeavesState extends State<LeavesHome>{
                 ),
                 child: ListTile(
                   title: Text(
-                    leaves_posts[index].title,
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    posts[index].title,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Text("u/"+
-                    leaves_posts[index].author,
+                  subtitle: Text("u/" +
+                      posts[index].author,
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
@@ -87,19 +121,18 @@ class _LeavesState extends State<LeavesHome>{
         },
       ),
     );
-  }
 
-  fetch(int num) async{
-    try {
-      leaves_posts = await LeavesPosts(num);
-    }catch(e){
-      print(e.toString());
-    }
-  }
 
-  getPosts(int num){
-    fetch(num);
+    //   FutureBuilder<List<Post>>(
+    //   future: widget.posts,
+    //   builder: (context, snapshot){
+    //     if(snapshot.connectionState == ConnectionState){
+    //       final posts = snapshot.data;
+    //
+    //     } else {
+    //       return CircularProgressIndicator();
+    //     }
+    //   }
+    // );
   }
-  
 }
-
