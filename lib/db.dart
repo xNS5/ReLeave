@@ -5,6 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:sprintf/sprintf.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
 
 
@@ -154,12 +156,13 @@ class Journal{
   int _id;
   String _date;
   String _content;
+  String _title;
   int _posted;
   String _redditURL;
 
   Journal();
 
-  Journal.Data(this._id, this._date, this._content, this._posted, [this._redditURL]);
+  Journal.Data(this._id, this._date, this._content, this._title, this._posted, [this._redditURL]);
 
   Journal.Content(this._date, this._content, this._posted, [this._redditURL]);
 
@@ -168,6 +171,8 @@ class Journal{
   String get date => _date;
 
   String get content => _content;
+
+  String get title => _title;
 
   CheckInData get checkin => checkin;
 
@@ -192,6 +197,10 @@ class Journal{
     this._content = content;
   }
 
+  set title(String title){
+    this._title = title;
+  }
+
   set setPosted(bool status){
     this._posted = (status == true) ? 1 : 0;
   }
@@ -204,6 +213,7 @@ class Journal{
     var map = Map<String, dynamic>();
     map['date'] = _date;
     map['content'] = _content;
+    map['title'] = _title;
     map['posted'] = _posted;
     map['url'] = _redditURL;
     return map;
@@ -214,6 +224,7 @@ class Journal{
       this._id = map['id'];
       this._date = map['date'];
       this._content = map['content'];
+      this._title = map['title'];
       this._posted = map['posted'];
       this._redditURL = map['url'];
     }
@@ -571,12 +582,69 @@ class SqlitedbHelper {
 
   Future<Database> get database async {
     if (_database == null) {
+
       _database = await _createDB();
+      // _setupAchievements(_database);
+      // await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
+      // await _database.execute("INSERT INTO 'releave.db'.achievement SELECT * FROM achData.achievement");
     }
     return _database;
   }
 
+
+  Future<Database> _getAchDB(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+
+    } else {
+      print("Opening existing database");
+    }
+    // open the database
+    return await openDatabase(achPath, readOnly: true);
+  }
+
+
+  void _setupAchievements(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+      Database achDB = await openDatabase(achPath, readOnly: true);
+    }
+  }
+
   Future<Database> _createDB() async {
+
     String path = join((await getDatabasesPath()), "releave.db");
     return await openDatabase(
         path,
@@ -597,6 +665,7 @@ class SqlitedbHelper {
               'date TEXT, '
               'content TEXT, '
               'posted INTEGER, '
+              'title TEXT, '
               'url TEXT)');
           await db.execute('CREATE TABLE feeling('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '

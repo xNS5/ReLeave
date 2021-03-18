@@ -7,6 +7,7 @@ export 'pages/CheckInLog.dart';
 export 'pages/Goals.dart';
 export 'pages/Journey.dart';
 export 'pages/Notes.dart';
+export 'pages/NoteView.dart';
 export 'pages/Resources.dart';
 export 'pages/SobrietyCounter.dart';
 export 'pages/ConsumptionTracker.dart';
