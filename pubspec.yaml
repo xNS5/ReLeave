@@ -31,6 +31,7 @@ dependencies:
   path_provider: any
   intl: ^0.16.1
   flutter_rating_bar: ^3.2.0+1
+  url_launcher: ^6.0.0
   table_calendar: ^2.3.3
   pull_to_refresh: ^1.6.3
   english_words: any
@@ -42,7 +43,6 @@ flutter_icons:
   image_path: "assets/icons/ReLeave_icon.png"
   android: true
   ios: true
-
 
 
   # The following adds the Cupertino Icons font to your application.
