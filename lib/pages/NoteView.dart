@@ -78,29 +78,32 @@ class _NoteViewState extends State<NoteView> {
         actions: [
           SobrietyCounter(),
         ],
+        leading: new IconButton(
+          icon: new Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 10),
-            Expanded(child: Row(
+            Container(height: 50, child: Row(
               children: <Widget>[
                 Expanded(
-                  flex: 3,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    tooltip: 'Back',
-                    child: Icon(Icons.arrow_back),
+                  flex:6,
+                  child: Text(
+                    widget.journal["title"],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24.0),
                   ),
                 ),
                 Expanded(
-                  flex:7,
+                  flex:4,
                   child: Text(
-                    DateFormat("MM-dd-yyyy    -    KK:mm a").format(DateTime.parse(widget.journal["date"])).toString(),
-                    style: TextStyle(fontSize: 24.0),
+                    DateFormat("    (MM-dd-yyyy)").format(DateTime.parse(widget.journal["date"])).toString(),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 18.0),
                   ),
                 )
               ],

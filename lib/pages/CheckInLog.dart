@@ -50,10 +50,13 @@ class _CheckInLogState extends State<CheckInLog> {
   final Map feelings;
   final bool abstained;
   final logController = TextEditingController();
+  final titleController = TextEditingController();
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     logController.dispose();
+    titleController.dispose();
     super.dispose();
   }
 
@@ -74,7 +77,7 @@ class _CheckInLogState extends State<CheckInLog> {
 
   Widget titleField() {
     return TextField(
-      controller: logController,
+      controller: titleController,
       minLines: 1,
       maxLines: 1,
       expands: false,
@@ -117,7 +120,7 @@ class _CheckInLogState extends State<CheckInLog> {
               // When the user presses the button, show an alert dialog containing the
               // text that the user has entered into the text field.
               onPressed: () {
-                submitCheckIn(this.abstained, this.feelings, logController.text);
+                submitCheckIn(this.abstained, this.feelings, logController.text, titleController.text);
                 _confirmToast(context);
                 Navigator.pop(context);
                 Navigator.pop(context);
@@ -132,7 +135,7 @@ class _CheckInLogState extends State<CheckInLog> {
     );// This trailing comma makes auto-formatting nicer for build methods.
   }
 
-  void submitCheckIn(abstained, feelings, note) {
+  void submitCheckIn(abstained, feelings, note, title) {
     var nowTime = (new DateTime.now()).toString();
     CheckInData ins_check = CheckInData.Data(nowTime, abstained);
     SqlitedbHelper.db.insertCheckin(ins_check).then((status){
@@ -146,7 +149,7 @@ class _CheckInLogState extends State<CheckInLog> {
         print("Feelings inserted into database");
       }
     });
-    Journal ins_journal = Journal.Data(ins_check.id, nowTime, note, 0, "");
+    Journal ins_journal = Journal.Data(ins_check.id, nowTime, note, title, 0, "");
     SqlitedbHelper.db.insertJournal(ins_journal).then((status) {
       if (status) {
         print("Journal inserted into database");

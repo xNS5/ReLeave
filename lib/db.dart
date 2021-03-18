@@ -156,18 +156,21 @@ class Journal{
   int _id;
   String _date;
   String _content;
+  String _title;
   int _posted;
   String _redditURL;
 
   Journal();
 
-  Journal.Data(this._id, this._date, this._content, this._posted, [this._redditURL]);
+  Journal.Data(this._id, this._date, this._content, this._title, this._posted, [this._redditURL]);
 
   int get id => _id;
 
   String get date => _date;
 
   String get content => _content;
+
+  String get title => _title;
 
   CheckInData get checkin => checkin;
 
@@ -192,6 +195,10 @@ class Journal{
     this._content = content;
   }
 
+  set title(String title){
+    this._title = title;
+  }
+
   set setPosted(bool status){
     this._posted = (status == true) ? 1 : 0;
   }
@@ -204,6 +211,7 @@ class Journal{
     var map = Map<String, dynamic>();
     map['date'] = _date;
     map['content'] = _content;
+    map['title'] = _title;
     map['posted'] = _posted;
     map['url'] = _redditURL;
     return map;
@@ -214,6 +222,7 @@ class Journal{
       this._id = map['id'];
       this._date = map['date'];
       this._content = map['content'];
+      this._title = map['title'];
       this._posted = map['posted'];
       this._redditURL = map['url'];
     }
@@ -654,6 +663,7 @@ class SqlitedbHelper {
               'date TEXT, '
               'content TEXT, '
               'posted INTEGER, '
+              'title TEXT, '
               'url TEXT)');
           await db.execute('CREATE TABLE feeling('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '

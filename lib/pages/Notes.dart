@@ -64,7 +64,7 @@ class _NoteState extends State<Note> {
   Widget noteRow(j) {
     return ListTile(
       title: Text(
-        DateFormat("MM-dd-yyyy    -    KK:mm a").format(DateTime.parse(j["date"])).toString(),
+        j["title"] + DateFormat("    (MM-dd-yyyy)").format(DateTime.parse(j["date"])).toString(),
         style: TextStyle(fontSize: 18.0),
       ),
       onTap: () {
