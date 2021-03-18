@@ -64,13 +64,13 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  assets:
-    - assets/db/releave_achievements.db
+#   assets:
+#     - assets/db/releave_achievements.db
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-     - assets/icons/ReLeave_icon.png
-     - assets/db/releave_achievements.db
+  #   assets:
+  #      - assets/icons/ReLeave_icon.png
+  #      - assets/db/releave_achievements.db
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
