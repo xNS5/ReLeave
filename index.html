@@ -8,19 +8,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://fonts.googleapis.com/css?family=Cinzel|Rajdhani|Crimson+Text|Darker+Grotesque|Questrial|DM+Serif+Display|Montserrat|Quattrocento+Sans|Quicksand&display=swap" rel="stylesheet">  
         <link rel="stylesheet" href = "style.css">
-        <link rel="icon" type="image/png" href="assets/releavelogo.png" sizes="32x32" />
+        <link rel="icon" type="image/png" href="assets/rlogo.png" sizes="32x32" />
         <title>ReLeave</title>
     </head>
 
     <header id="top">
-            <div class="header_title">ReLeave</div>
-            <div class="header_subtitle">An app to help you on your sobriety journey.</div>
-            <div class="header_description">Whether you're looking to save some cash or kick an unhealthy dependence, ReLeave is designed to meet your needs and connect you with like-minded people as you grow.</div>
             
             
-                <!-- image of app screen on right side-->
-
-            
+            <div style="display: flex;">
+                <div style="display:block;">
+                    <div class="header_title">ReLeave</div>
+                    <div class="header_subtitle">An app to help you on your sobriety journey.</div>
+                    <div class="header_description">Whether you're looking to save some cash or kick an unhealthy dependence, ReLeave is designed to meet your needs and connect you with like-minded people as you grow.</div>
+                </div>
+                <img src="assets/logosplashscreen.png" alt="Logo" style="width: 20vw;  margin-left: 10vw; margin-top: 20vh;"/>
+            </div>
             <div class="down_arrow" style="color: #3b4252; font-weight: bold;">
                 <a href="#about" style="width: 3vw; height: 3vh;">About</a>
                  | 
@@ -29,6 +31,10 @@
                 <a href="#achievements" style="width: 3vw; height: 3vh;">Achievements</a>
                  | 
                 <a href="#journal" style="width: 3vw; height: 3vh;">Journal</a>
+                 <br/>
+                <a href="#reddit" style="width: 3vw; height: 3vh;">Reddit Integration</a>
+                 | 
+                <a href="#resources" style="width: 3vw; height: 3vh;">Resources</a>
                  | 
                 <a href="#designdoc" style="width: 3vw; height: 3vh;">Prototype</a>
             </div>
@@ -89,25 +95,41 @@
                     amount of cannabis use.
                 </p>
             </div>
-            <!-- Images of Goals Page -->
+            <img src="assets/goals.jpg" alt="Screenshot of Goals Page" style="width: 15vw;  margin-left: 30vh;"/>
         </div>
         <div id="achievements" class="right_column" style="background: linear-gradient(90deg, #a3be8c 57%, #4c566a 57%);">
-            <img src="" alt="Screenshot of Achievements Page" style="width: 20vw;  margin-right: 30vh;"/>
+            <img src="assets/achievements.jpg" alt="Screenshot of Achievements Page" style="width: 15vw;  margin-right: 30vh;"/>
             <div class="right_textbox">
                 <h1>Achievements</h1>
-                <p> (Info about achievements)
+                <p> Achievements can provide an additional incentive for users who want a clear reward for staying sober. While this feature is not fully implemented, some achievements might include saving a certain amount of money, staying sober for a streak of several days, etc.
                 </p>
             </div>
         </div>
         <div id="journal" class="left_column" style="background: linear-gradient(90deg, #4c566a 35%, #ebcb8b 35%);">
             <div class="left_textbox">
-                <h1>Sobriety Counter</h1>
+                <h1>Journal & Sobriety Counter</h1>
                 <p>The cornerstones of our app are the journal, which allows the user to look back on their feelings and progress, and the sobriety counter, which tracks how long the user has been sober.
-                    Each day the user can journal how they're feeling and will also input whether they've used cannabis that day.
+                    Each day the user can journal how they're feeling and also input whether they've used cannabis that day.
 
                 </p>
             </div>
-            <!-- Images of Goals Page -->
+            <img src="assets/checkin.jpg" alt="Screenshot of Checkin Page" style="width: 15vw;  margin-left: 30vh;"/>
+        </div>
+        <div id="reddit" class="right_column" style="background: linear-gradient(90deg, #8fbcbb 57%, #4c566a 57%);">
+            <img src="assets/reddit.jpg" alt="Screenshot of Post Browsing Page" style="width: 12vw;  margin-right: 30vh;"/>
+            <div class="right_textbox">
+                <h1>Reddit Integration</h1>
+                <p> Thanks to integration with the Reddit API, users can browse the /r/leaves subreddit directly from the ReLeave app, with access to the thousands of posts by others also seeking to break a marijuana addiction.
+                </p>
+            </div>
+        </div>
+        <div id="resources" class="left_column" style="background: linear-gradient(90deg, #4c566a 35%, #d08770 35%);">
+            <div class="left_textbox">
+                <h1>Resources</h1>
+                <p> We also provide a list of links to resources that users might find helpful, including two hotlines, the CDC, and National Institute on Drug Abuse.
+                </p>
+            </div>
+            <img src="assets/res2.jpg" alt="Screenshot of Resources Page" style="width: 15vw;  margin-left: 30vh;"/>
         </div>
         <div id="designdoc" class="right_column">
             <a href="https://docs.google.com/document/d/1iUIpz6ffn11KG46ftYbsVHoTeYsWqjl-3u8pkPWsARc/edit?usp=sharing" style="margin-right: 30vh;">
