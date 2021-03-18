@@ -25,6 +25,34 @@ class Resource extends StatefulWidget {
 }
 
 class _ResourcesState extends State<Resource> {
+  Future<void> _showWarning() async{
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("Warning"),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('If you are having a medical emergency'),
+                  Text('Dial 911 immediately')
+                ],
+              ),
+            ),
+            actions: <Widget> [
+              TextButton(
+                child: Text("I understand"),
+                onPressed: (){
+                  Navigator.of(context).pop();
+                }
+              )
+            ],
+          );
+        });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

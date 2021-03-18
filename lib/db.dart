@@ -5,6 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:sprintf/sprintf.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
 
 
@@ -154,18 +156,23 @@ class Journal{
   int _id;
   String _date;
   String _content;
+  String _title;
   int _posted;
   String _redditURL;
 
   Journal();
 
-  Journal.Data(this._id, this._date, this._content, this._posted, [this._redditURL]);
+  Journal.Data(this._id, this._date, this._content, this._title, this._posted, [this._redditURL]);
+
+  Journal.Content(this._date, this._content, this._posted, [this._redditURL]);
 
   int get id => _id;
 
   String get date => _date;
 
   String get content => _content;
+
+  String get title => _title;
 
   CheckInData get checkin => checkin;
 
@@ -190,6 +197,10 @@ class Journal{
     this._content = content;
   }
 
+  set title(String title){
+    this._title = title;
+  }
+
   set setPosted(bool status){
     this._posted = (status == true) ? 1 : 0;
   }
@@ -202,6 +213,7 @@ class Journal{
     var map = Map<String, dynamic>();
     map['date'] = _date;
     map['content'] = _content;
+    map['title'] = _title;
     map['posted'] = _posted;
     map['url'] = _redditURL;
     return map;
@@ -212,6 +224,7 @@ class Journal{
       this._id = map['id'];
       this._date = map['date'];
       this._content = map['content'];
+      this._title = map['title'];
       this._posted = map['posted'];
       this._redditURL = map['url'];
     }
@@ -467,11 +480,13 @@ class AchievementData{
   String _date;
   String _goalType;
   String _title;
+  String _description;
   int _threshold;
   int _achieved;
+  String _iconName;
 
   AchievementData();
-  AchievementData.Data(this._date, this._goalType, this._title, this._threshold, this._achieved);
+  AchievementData.Data(this._date, this._goalType, this._title, this._description, this._threshold, this._achieved, this._iconName);
 
   int get id => _id;
 
@@ -481,9 +496,13 @@ class AchievementData{
 
   String get title => _title;
 
+  String get description => _description;
+
   int get threshold => _threshold;
 
   bool get achieved => (_achieved == 1) ? true : false;
+
+  String get iconName => _iconName;
 
   set id(int i){
     if(i > 0){
@@ -508,6 +527,12 @@ class AchievementData{
     }
   }
 
+  set description(String description){
+    if(description != null && description.length > 0){
+      this._description = description;
+    }
+  }
+
   set threshold(int threshold){
     this._threshold = threshold;
   }
@@ -516,14 +541,24 @@ class AchievementData{
       this._achieved = (status == true) ? 1 : 0;
   }
 
+  set iconName(String name){
+    if(name != null && name.length > 0){
+      this._iconName = name;
+    }
+  }
+
+
   Map<String, dynamic> toMap(){
     var map = new Map<String, dynamic>();
     map['id'] = this._id;
     map['date'] = this._date;
     map['goaltype'] = this._goalType;
     map['title'] = this._title;
+    map['description'] = this._description;
     map['threshold'] = this._threshold;
     map['achieved'] = this._achieved;
+    map['iconname'] = this._iconName;
+    return map;
   }
 
   AchievementData.fromMap(Map<String, dynamic> map){
@@ -531,8 +566,10 @@ class AchievementData{
     this._date = map['date'];
     this._goalType = map['goaltype'];
     this._title = map['title'];
+    this._description = map['description'];
     this._threshold = map['threshold'];
     this._achieved = map['achieved'];
+    this._iconName = map['iconname'];
   }
 
 }
@@ -545,51 +582,69 @@ class SqlitedbHelper {
 
   Future<Database> get database async {
     if (_database == null) {
+
       _database = await _createDB();
-      // await _database.transaction((txn) async{
-      //   AchievementData a;
-      //   for(int i = 1; i < 5; i++) {
-      //     a = new AchievementData();
-      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "week" : "weeks")]);
-      //     a.date = null;
-      //     a.goalType = "duration";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      //   for(int i = 1; i < 5; i++) {
-      //     a = new AchievementData();
-      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "year" : "years")]);
-      //     a.date = null;
-      //     a.goalType = "duration";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      //   for(int i = 1; i < 5; i++) {
-      //     a = new AchievementData();
-      //     a.title = sprintf("Sober for %i %s", [i, ((i == 1) ? "year" : "years")]);
-      //     a.date = null;
-      //     a.goalType = "duration";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      //   for(int i = 0; i < 100; i++){
-      //     a = new AchievementData();
-      //     a.title = sprintf("Saved %i dollars", i * 100);
-      //     a.date = null;
-      //     a.goalType = "money";
-      //     a.threshold = i;
-      //     a._achieved = 0;
-      //     txn.insert('achievement', a.toMap());
-      //   }
-      // });
+      // _setupAchievements(_database);
+      // await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
+      // await _database.execute("INSERT INTO 'releave.db'.achievement SELECT * FROM achData.achievement");
     }
     return _database;
   }
 
+
+  Future<Database> _getAchDB(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+
+    } else {
+      print("Opening existing database");
+    }
+    // open the database
+    return await openDatabase(achPath, readOnly: true);
+  }
+
+
+  void _setupAchievements(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+      Database achDB = await openDatabase(achPath, readOnly: true);
+    }
+  }
+
   Future<Database> _createDB() async {
+
     String path = join((await getDatabasesPath()), "releave.db");
     return await openDatabase(
         path,
@@ -610,6 +665,7 @@ class SqlitedbHelper {
               'date TEXT, '
               'content TEXT, '
               'posted INTEGER, '
+              'title TEXT, '
               'url TEXT)');
           await db.execute('CREATE TABLE feeling('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
@@ -636,8 +692,10 @@ class SqlitedbHelper {
               'date TEXT, '
               'goaltype TEXT, '
               'title TEXT, '
-              'threshold INTEGER'
-              'achieved INTEGER)');
+              'description TEXT, '
+              'threshold INTEGER, '
+              'achieved INTEGER, '
+              'iconname TEXT)');
         }
     );
   }
@@ -777,11 +835,6 @@ class SqlitedbHelper {
   Future<bool> insertFeeling(Feelings feels) async{
 
     try{
-      // If it already exists, update instead.
-      // var temp = getFeelings(feels.date);
-      // if(temp != null){
-      //   return updateFeeling(feels);
-      // }
       final db = await database;
       if(feels != null){
         feels.id = await db.insert('feeling', feels.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
@@ -821,7 +874,7 @@ class SqlitedbHelper {
       a.id = await db.insert('achievement', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
-      print("Unable to insert goal into database: " + e.toString());
+      print("Unable to insert achievement into database: " + e.toString());
     }
     return false;
   }

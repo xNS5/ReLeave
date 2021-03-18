@@ -46,7 +46,28 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
   example of insertion in main.dart, user insertion. lines 12-17.
 
    */
-  void refresh() {
+  @override
+  void initState() {
+    super.initState();
+    pull();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Future.delayed(Duration(milliseconds: 50), () {pull();});
+    // This is an example. The "setCount()" function will be called when it reads
+    // from the database to appropriately set the number of sober days.
+    // setCount(1);
+    return Align(child: Padding(padding: EdgeInsets.only(right: 15), child:  Text(
+      "Days Sober: $soberCount",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 20,
+      ),
+    )));
+  }
+
+  pullUser() async{
     SqlitedbHelper.db.getUser().then((user) {
       if (user != null) {
         try {
@@ -55,26 +76,20 @@ class _SobrietyCounterState extends State<SobrietyCounter> {
           difference = today
               .difference(start)
               .inDays;
-          soberCount = difference.toString();
+
         } catch (e) {
           print("Sober Counter: Error with DateTime: " + e.toString());
         }
       }
     });
+    setState(() {
+      soberCount = difference.toString();
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () => refresh());
-    // This is an example. The "setCount()" function will be called when it reads
-    // from the database to appropriately set the number of sober days.
-    // setCount(1);
-    return Align(child: Padding(padding: EdgeInsets.only(right: 15), child: Text(
-      "Days Sober: $soberCount",
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 24,
-      ),
-    )));
+  pull(){
+    pullUser();
   }
+
+
 }
