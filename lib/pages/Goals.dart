@@ -101,6 +101,7 @@ class _GoalState extends State<GoalHome> {
             Padding(
               padding: EdgeInsets.fromLTRB(30, 5, 30, 15),
               child: TextField(
+                keyboardType: TextInputType.number,
                 controller: amountFieldController,
                 decoration: InputDecoration(
                   //border: InputBorder.none,
@@ -174,15 +175,25 @@ class _GoalState extends State<GoalHome> {
 
 
   void insertNewGoal() {
+    Goal toInsert;
     String goalType;
-    if(isSelected[0])
-      goalType = 'money';
-    else if(isSelected[1])
+    if(isSelected[0]) {
+       goalType = 'money';
+       toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, goalType, 0, double.parse(amountFieldController.text));
+     } else if(isSelected[1]) {
       goalType = 'amount';
-    else if(isSelected[2])
+      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, goalType, int.parse(amountFieldController.text), 0.0);
+    } else if(isSelected[2]) {
       goalType = 'duration';
-    Goal toInsert = new Goal.Data(nameFieldController.text, goalType, amountFieldController.text);
+      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, amountFieldController.text, 0, 0.0);
+    }
 
-    SqlitedbHelper.db.insertGoal(toInsert);
+    SqlitedbHelper.db.insertGoal(toInsert).then((status) {
+      if(status){
+        print("Goal inserted!");
+      } else {
+        print("Failed to insert goal");
+      }
+    });
   }
 }
