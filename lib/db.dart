@@ -164,6 +164,8 @@ class Journal{
 
   Journal.Data(this._id, this._date, this._content, this._title, this._posted, [this._redditURL]);
 
+  Journal.Content(this._date, this._content, this._posted, [this._redditURL]);
+
   int get id => _id;
 
   String get date => _date;
@@ -833,11 +835,6 @@ class SqlitedbHelper {
   Future<bool> insertFeeling(Feelings feels) async{
 
     try{
-      // If it already exists, update instead.
-      // var temp = getFeelings(feels.date);
-      // if(temp != null){
-      //   return updateFeeling(feels);
-      // }
       final db = await database;
       if(feels != null){
         feels.id = await db.insert('feeling', feels.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);

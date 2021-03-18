@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:releave_app/lib.dart';
+import 'package:releave_app/pages/Leaves.dart';
 
 class Sidebar extends StatelessWidget {
 
@@ -56,6 +57,10 @@ class Sidebar extends StatelessWidget {
             ListTile(
               title: Text('Settings'),
               onTap: () => {Navigator.of(context).pop()},
+            ),
+            ListTile(
+              title: Text('r/Leaves'),
+              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => Leaves()))},
             ),
           ],
         ),

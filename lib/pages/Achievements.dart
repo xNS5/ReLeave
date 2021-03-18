@@ -192,9 +192,6 @@ class _AchievementState extends State<Achievement> {
       );
     });
   }
-
-
-
 }
 
 
