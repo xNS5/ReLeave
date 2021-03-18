@@ -31,9 +31,9 @@ class User {
 
   User();
 
-  User.data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._username]);
+  User.Data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._consumptionMethod, this._amount, this._money, this._username]);
 
-  User.consumption(this._consumptionMethod, this._amount, this._money);
+  User.Consumption(this._consumptionMethod, this._amount, this._money);
 
   int get id => _id;
 
