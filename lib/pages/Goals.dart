@@ -191,6 +191,8 @@ class _GoalState extends State<GoalHome> {
 
     await SqlitedbHelper.db.insertGoal(toInsert).then((status) {
       if(status){
+        nameFieldController.clear();
+        amountFieldController.clear();
         print("Goal inserted!");
       } else {
         print("Failed to insert goal");
