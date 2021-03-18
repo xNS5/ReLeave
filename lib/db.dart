@@ -762,9 +762,8 @@ class SqlitedbHelper {
   Future<List> getGoal() async{
     final db = await database;
     try{
-      List<Goal> list = new List<Goal>();
-      var goals = await db.query('goal');
-      return goals.toList();
+      var results = await db.query('goal');
+      return results.toList();
     }catch(e){
       print("Error getting goals: " + e.toString());
     }
@@ -772,8 +771,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getAchievements() async{
+    final db = await database;
     try{
-      final db = await database;
       var achievements = await db.query('achievement');
       return achievements.toList();
     } catch (e){
@@ -783,8 +782,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getAchievementsType(String type) async{
+    final db = await database;
     try{
-      final db = await database;
       var achievements = await db.query('achievement', where: 'goaltype = $type');
       return achievements.toList();
     } catch (e){
@@ -794,8 +793,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getUnAchieved() async{
-    try{
-      final db = await database;
+  final db = await database;
+   try{
       var achievements = await db.query('achievement', where: 'achieved = ?', whereArgs: [0]);
       return achievements.toList();
     } catch (e){
@@ -805,8 +804,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getUnAchievedType(String type) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       var achievements = await db.query('achievement', where: 'goaltype = $type AND achieved = ?', whereArgs: [0]);
       return achievements.toList();
     } catch (e){
@@ -877,8 +876,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertAchievement(AchievementData a) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       a.id = await db.insert('achievement', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
@@ -892,8 +891,8 @@ class SqlitedbHelper {
   * Update methods
   * */
   Future<bool> updateUser(User user) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       await db.update('user', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
       print(await db.query('user'));
       return true;
