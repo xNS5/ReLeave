@@ -82,7 +82,7 @@ class ConsumptionTrackerState extends State<ConsumptionTrackerMain> {
           return Scaffold(
             drawer: Sidebar(),
             appBar: AppBar(
-              title: Text('Consumption Tracker'),
+              title: Text(widget.title),
               actions: [
                 SobrietyCounter(),
               ],
