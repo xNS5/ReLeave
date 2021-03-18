@@ -84,10 +84,28 @@ class _NoteViewState extends State<NoteView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             SizedBox(height: 10),
-            Text(
-              DateFormat("MM-dd-yyyy    -    KK:mm a").format(DateTime.parse(widget.journal["date"])).toString(),
-              style: TextStyle(fontSize: 24.0),
-            ),
+            Expanded(child: Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 3,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    tooltip: 'Back',
+                    child: Icon(Icons.arrow_back),
+                  ),
+                ),
+                Expanded(
+                  flex:7,
+                  child: Text(
+                    DateFormat("MM-dd-yyyy    -    KK:mm a").format(DateTime.parse(widget.journal["date"])).toString(),
+                    style: TextStyle(fontSize: 24.0),
+                  ),
+                )
+              ],
+            ),),
+
             SizedBox(height: 20),
             feelingGraph(),
             SizedBox(height: 20),

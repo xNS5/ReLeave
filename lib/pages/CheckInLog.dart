@@ -66,9 +66,22 @@ class _CheckInLogState extends State<CheckInLog> {
         expands: true,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Record some thoughts',
+          labelText: 'Thoughts...',
         ),
       ),
+    );
+  }
+
+  Widget titleField() {
+    return TextField(
+      controller: logController,
+      minLines: 1,
+      maxLines: 1,
+      expands: false,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: 'Create a Check-in Title...'
+      )
     );
   }
 
@@ -87,6 +100,8 @@ class _CheckInLogState extends State<CheckInLog> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            SizedBox(height: 10),
+            titleField(),
             SizedBox(height: 10),
             Text(
               "Record some thoughts (Optional)",
