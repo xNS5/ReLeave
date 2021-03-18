@@ -1,0 +1,110 @@
+html {
+    scroll-behavior: smooth;
+    scrollbar-color: #8a8a8a white;
+    scrollbar-width: thin;
+}
+
+body, header {
+    font-family: 'Quattrocento Sans', sans-serif;
+    height: 100vh;
+    margin: 0;
+}
+
+header {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(100deg, #4c566a 39.9%, #a3be8c 40%);
+    color: #e5e9f0;
+    text-align: left;
+}
+
+footer {
+    background-color: #4c566a;
+    color: black;
+    margin: 0;
+    padding: 10px;
+    height: auto;
+    position: relative;
+    display: block;
+    text-align: center;
+}
+
+
+body {
+    color: white;
+
+}
+
+/* nice-to-have idea: the column size for each section randomly generates */
+
+.right_column {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    display: flex;
+    justify-content: flex-end;
+    margin: auto;
+    background: linear-gradient(90deg, #88c0d0 60%, #4c566a 60%);
+}
+
+.right_textbox {
+    padding-right: 17vw;
+    width: 17vw;
+}
+.left_column {
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    display: flex;
+    justify-content: flex-start;
+    margin: auto;
+    background: linear-gradient(90deg, #4c566a 30%, #e5e9f0 30%);
+}
+
+.left_textbox {
+    padding-left: 7vw;
+    width: 20vw;
+}
+
+.header_title {
+    padding-top: 37vh;
+    padding-left: 12vw;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 68px;
+}
+
+.header_subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    padding-left: 12vw;
+    padding-bottom: 20px;
+}
+.header_description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    padding-left: 12vw;
+    width: 20vw;
+}
+
+
+.down_arrow {
+    color: #3b4252;
+    width: 100%;
+    text-align: center;
+    padding-top: 38vh;
+}
+
+.up_arrow {
+    width: 100%;
+    text-align: center;
+}
+
+a {
+    color: #3b4252;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #e5e9f0;
+}
