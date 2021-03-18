@@ -141,7 +141,7 @@ class _GoalState extends State<GoalHome> {
                         content: Text('New goal saved!')
                     );
                   },
-                  child: Text('Save', style: TextStyle(fontSize: 17))
+                  child: Text('Save', style: TextStyle(fontSize: 25))
               ),
             ),
             Padding(
@@ -174,21 +174,22 @@ class _GoalState extends State<GoalHome> {
   }
 
 
-  void insertNewGoal() {
-    Goal toInsert;
+  void insertNewGoal() async {
+    Goal toInsert = new Goal();
     String goalType;
     if(isSelected[0]) {
        goalType = 'money';
-       toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, goalType, 0, double.parse(amountFieldController.text));
+       toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, new DateTime.now().toString(), 0, double.parse(amountFieldController.text));
      } else if(isSelected[1]) {
       goalType = 'amount';
-      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, goalType, int.parse(amountFieldController.text), 0.0);
+      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, new DateTime.now().toString(), int.parse(amountFieldController.text), 0.0);
     } else if(isSelected[2]) {
       goalType = 'duration';
-      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, amountFieldController.text, 0, 0.0);
+      DateTime due = new DateTime.now().add(Duration(days: int.parse(amountFieldController.text)));
+      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, due.toString() , 0, 0.0);
     }
 
-    SqlitedbHelper.db.insertGoal(toInsert).then((status) {
+    await SqlitedbHelper.db.insertGoal(toInsert).then((status) {
       if(status){
         print("Goal inserted!");
       } else {
