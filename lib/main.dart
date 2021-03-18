@@ -87,4 +87,4 @@ class _HomeState extends State<HomePage>{
   setUser(){
     addUser(new User.data("Michael", "Kennedy", "11/06/1997", "2021-01-01", "ReLeave-Dev"));
   }
-}
+
