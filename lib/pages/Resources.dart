@@ -120,7 +120,7 @@ class _ResourcesState extends State<Resource> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                          padding: EdgeInsets.fromLTRB(30, 10, 30, 5),
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text('SAMHSA’s National Helpline is a free, confidential, 24/7, 365-day-a-year treatment referral and information service (in English and Spanish) for individuals and families facing mental and/or substance use disorders.'),
@@ -170,7 +170,7 @@ class _ResourcesState extends State<Resource> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                          padding: EdgeInsets.fromLTRB(30, 10, 25, 0),
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text('Answers some common questions about marijuana including questions concerning its effects, addictive potential, and how to know if you are addicted.'),
@@ -178,7 +178,6 @@ class _ResourcesState extends State<Resource> {
                         ),
                       ],
                     ),
-
                   ),
                   Container(
                     height: 170,

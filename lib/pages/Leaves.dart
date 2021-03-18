@@ -34,7 +34,7 @@ class _LeavesState extends State<LeavesHome> {
   @override
   void initState() {
     super.initState();
-    posts = _fetch(10);
+    posts = _fetch(30);
   }
 
   @override
@@ -117,11 +117,25 @@ class _LeavesState extends State<LeavesHome> {
                               "u/" + posts[index].author,
                               style: TextStyle(fontSize: 17),
                             ),
+                            onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute( builder: (context) => LeavesPost(key: UniqueKey(),title: widget.title, post: posts[index])));
+                            },
                           ),
                         ),
                       ],
                     );
-                  }));
+                  }
+                  ),
+          //     floatingActionButton: FloatingActionButton(
+          //     onPressed: (){
+          //       setState(() {
+          //       });
+          //
+          //     },
+          //       child: const Icon(Icons.refresh),
+          //       backgroundColor: Colors.black
+          // ),
+          );
         }
       },
     );

@@ -53,11 +53,9 @@ class _NoteState extends State<Note> {
         itemCount: (2*sortedJournals.length) - (sortedJournals.length % 2),
         itemBuilder: (context, i) {
           if (i.isOdd) return Divider();
-
           final index = i ~/ 2;
-
           return noteRow(sortedJournals[index][0]);
-        }
+        },
     );
   }
 
