@@ -29,10 +29,9 @@ class HomePage extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<HomePage>{
-
+class _HomeState extends State<HomePage> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     setUser();
   }
@@ -48,43 +47,46 @@ class _HomeState extends State<HomePage>{
           ],
         ),
         body: Center(
-              child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget> [
-              MaterialButton(
-              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => RedditSubmission()));},
+          child: Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
+            MaterialButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RedditSubmission()));
+              },
               child: Text("Community\nCheck-In"),
               color: Colors.blue,
               splashColor: Colors.lightBlueAccent,
               textColor: Colors.white,
               padding: EdgeInsets.fromLTRB(50, 50, 50, 50),
               shape: CircleBorder(),
-              ),
-              MaterialButton(
-              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInMain()));},
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CheckInMain()));
+              },
               child: Text("Personal\nCheck-In"),
               color: Colors.green,
               splashColor: Colors.lightGreenAccent,
               textColor: Colors.white,
               padding: EdgeInsets.fromLTRB(50, 50, 50, 50),
               shape: CircleBorder(),
-              ),
-              ]
-              ),
-              )
-          );
+            ),
+          ]),
+        ));
+  }
+}
+
+addUser(User user) async {
+  SqlitedbHelper.db.insertUser(user).then((status) {
+    if (status) {
+      print("User inserted into database");
     }
-  }
+  });
+}
 
-  addUser(User user) async{
-    SqlitedbHelper.db.insertUser(user).then((status){
-      if(status){
-        print("User inserted into database");
-      }
-    });
-  }
-
-  setUser(){
-    addUser(new User.data("Michael", "Kennedy", "11/06/1997", "2021-01-01", "ReLeave-Dev"));
-  }
+setUser() {
+  addUser(new User.Data("Michael", "Kennedy", "11/06/1997", "2021-01-01", "Joint", 10, 300, "ReLeave-Dev"));
 }

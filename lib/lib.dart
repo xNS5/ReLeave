@@ -18,5 +18,6 @@ export 'pages/RedditSubmission.dart';
 export 'package:sqflite/sqflite.dart';
 export 'package:releave_app/api/LeavesPost.g.dart';
 export 'package:releave_app/models/PostModel.dart';
+export 'package:releave_app/pages/LeavesPost.dart';
 
 

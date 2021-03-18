@@ -67,9 +67,11 @@ class _CheckInLogState extends State<CheckInLog> {
         minLines: null,
         maxLines: null,
         expands: true,
+        textAlignVertical: TextAlignVertical.top,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Thoughts...',
+          alignLabelWithHint: true,
         ),
       ),
     );

@@ -101,6 +101,7 @@ class _GoalState extends State<GoalHome> {
             Padding(
               padding: EdgeInsets.fromLTRB(30, 5, 30, 15),
               child: TextField(
+                keyboardType: TextInputType.number,
                 controller: amountFieldController,
                 decoration: InputDecoration(
                   //border: InputBorder.none,
@@ -140,7 +141,7 @@ class _GoalState extends State<GoalHome> {
                         content: Text('New goal saved!')
                     );
                   },
-                  child: Text('Save', style: TextStyle(fontSize: 17))
+                  child: Text('Save', style: TextStyle(fontSize: 25))
               ),
             ),
             Padding(
@@ -173,16 +174,29 @@ class _GoalState extends State<GoalHome> {
   }
 
 
-  void insertNewGoal() {
+  void insertNewGoal() async {
+    Goal toInsert = new Goal();
     String goalType;
-    if(isSelected[0])
-      goalType = 'money';
-    else if(isSelected[1])
+    if(isSelected[0]) {
+       goalType = 'money';
+       toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, new DateTime.now().toString(), 0, double.parse(amountFieldController.text));
+     } else if(isSelected[1]) {
       goalType = 'amount';
-    else if(isSelected[2])
+      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, new DateTime.now().toString(), int.parse(amountFieldController.text), 0.0);
+    } else if(isSelected[2]) {
       goalType = 'duration';
-    Goal toInsert = new Goal.Data(nameFieldController.text, goalType, amountFieldController.text);
+      DateTime due = new DateTime.now().add(Duration(days: int.parse(amountFieldController.text)));
+      toInsert = new Goal.Data(nameFieldController.text, goalType, goalType, due.toString() , 0, 0.0);
+    }
 
-    SqlitedbHelper.db.insertGoal(toInsert);
+    await SqlitedbHelper.db.insertGoal(toInsert).then((status) {
+      if(status){
+        nameFieldController.clear();
+        amountFieldController.clear();
+        print("Goal inserted!");
+      } else {
+        print("Failed to insert goal");
+      }
+    });
   }
 }

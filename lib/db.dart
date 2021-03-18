@@ -31,9 +31,9 @@ class User {
 
   User();
 
-  User.data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._username]);
+  User.Data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._consumptionMethod, this._amount, this._money, this._username]);
 
-  User.consumption(this._consumptionMethod, this._amount, this._money);
+  User.Consumption(this._consumptionMethod, this._amount, this._money);
 
   int get id => _id;
 
@@ -407,18 +407,21 @@ class Goal{
   String _title;
   String _goalType;
   String _consumptionMethod;
+  String _date;
   int _goalConsumptionAmount;
   double _goalMoney;
 
   Goal();
 
-  Goal.Data(this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
+  Goal.Data(this._title, this._goalType, [ this._date, this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
 
   int get id => _id;
 
   String get title => _title;
 
   String get goalType => _goalType;
+
+  String get date => _date;
 
   String get consumptionMethod => _consumptionMethod;
 
@@ -432,10 +435,13 @@ class Goal{
     }
   }
 
-  set title(String title){
-    if(title.length == 0){
-      this._title = " ";
+  set date(String date){
+    if(date != null){
+      this._date = date;
     }
+  }
+
+  set title(String title){
     this._title = title;
   }
 
@@ -459,15 +465,18 @@ class Goal{
     var map = Map<String, dynamic>();
     map['id'] = this._id;
     map['title'] = this._title;
+    map['date'] = this._date;
     map['goaltype'] = this._goalType;
     map['consumptionMethod'] = this._goalType;
     map['goalAmount'] = this._goalConsumptionAmount;
     map['goalSaved'] = this._goalMoney;
+    return map;
   }
 
   Goal.fromMap(Map<String, dynamic> map){
     this._id = map['id'];
     this._title = map['title'];
+    this._date = map['date'];
     this._goalType = map['goaltype'];
     this._consumptionMethod = map['consumptionMethod'];
     this._goalConsumptionAmount = map['goalAmount'];
@@ -582,7 +591,6 @@ class SqlitedbHelper {
 
   Future<Database> get database async {
     if (_database == null) {
-
       _database = await _createDB();
       // _setupAchievements(_database);
       // await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
@@ -684,6 +692,7 @@ class SqlitedbHelper {
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
               'title TEXT, '
               'goaltype TEXT, '
+              'date TEXT, '
               'consumptionMethod TEXT, '
               'goalAmount INTEGER, '
               'goalSaved REAL)');
@@ -753,9 +762,8 @@ class SqlitedbHelper {
   Future<List> getGoal() async{
     final db = await database;
     try{
-      List<Goal> list = new List<Goal>();
-      var goals = await db.query('goal');
-      return goals.toList();
+      var results = await db.query('goal');
+      return results.toList();
     }catch(e){
       print("Error getting goals: " + e.toString());
     }
@@ -763,8 +771,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getAchievements() async{
+    final db = await database;
     try{
-      final db = await database;
       var achievements = await db.query('achievement');
       return achievements.toList();
     } catch (e){
@@ -774,8 +782,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getAchievementsType(String type) async{
+    final db = await database;
     try{
-      final db = await database;
       var achievements = await db.query('achievement', where: 'goaltype = $type');
       return achievements.toList();
     } catch (e){
@@ -785,8 +793,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getUnAchieved() async{
-    try{
-      final db = await database;
+  final db = await database;
+   try{
       var achievements = await db.query('achievement', where: 'achieved = ?', whereArgs: [0]);
       return achievements.toList();
     } catch (e){
@@ -796,8 +804,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getUnAchievedType(String type) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       var achievements = await db.query('achievement', where: 'goaltype = $type AND achieved = ?', whereArgs: [0]);
       return achievements.toList();
     } catch (e){
@@ -833,9 +841,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertFeeling(Feelings feels) async{
-
+    final db = await database;
     try{
-      final db = await database;
       if(feels != null){
         feels.id = await db.insert('feeling', feels.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
         return true;
@@ -847,8 +854,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertCheckin(CheckInData check) async{
+    final db = await database;
     try {
-      final db = await database;
       check.id = await db.insert('checkin', check.toMap());
       return true;
     } catch (e){
@@ -858,9 +865,9 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertGoal(Goal goal) async{
+    final db = await database;
     try{
-      final db = await database;
-      goal.id = await db.insert('goal', goal.toMap());
+      goal.id = await db.insert('goal', goal.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
       print("Unable to insert goal into database: " + e.toString());
@@ -869,8 +876,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertAchievement(AchievementData a) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       a.id = await db.insert('achievement', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
@@ -884,8 +891,8 @@ class SqlitedbHelper {
   * Update methods
   * */
   Future<bool> updateUser(User user) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       await db.update('user', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
       print(await db.query('user'));
       return true;

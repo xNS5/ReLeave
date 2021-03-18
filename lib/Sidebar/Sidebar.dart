@@ -31,15 +31,11 @@ class Sidebar extends StatelessWidget {
               onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => NotesMain()))},
             ),
             ListTile(
-              title: Text('Check-in (temp)'),
-              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => CheckInMain()))},
+              title: Text('r/Leaves'),
+              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => Leaves()))},
             ),
             ListTile(
-              title: Text('Sobriety Counter (Temp)'),
-              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => SobrietyCounter()))},
-            ),
-            ListTile(
-              title: Text('ConsumptionTracker (Temp)'),
+              title: Text('Consumption Tracker'),
               onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => ConsumptionTrackerMain()))},
             ),
             ListTile(
@@ -53,14 +49,6 @@ class Sidebar extends StatelessWidget {
             ListTile(
               title: Text('Resources'),
               onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => ResourcesMain()))},
-            ),
-            ListTile(
-              title: Text('Settings'),
-              onTap: () => {Navigator.of(context).pop()},
-            ),
-            ListTile(
-              title: Text('r/Leaves'),
-              onTap: () => {Navigator.push(context, MaterialPageRoute(builder: (context) => Leaves()))},
             ),
           ],
         ),

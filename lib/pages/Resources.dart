@@ -25,32 +25,32 @@ class Resource extends StatefulWidget {
 }
 
 class _ResourcesState extends State<Resource> {
-  Future<void> _showWarning() async{
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context){
-          return AlertDialog(
-            title: Text("Warning"),
-            content: SingleChildScrollView(
-              child: ListBody(
-                children: <Widget>[
-                  Text('If you are having a medical emergency'),
-                  Text('Dial 911 immediately')
-                ],
-              ),
-            ),
-            actions: <Widget> [
-              TextButton(
-                child: Text("I understand"),
-                onPressed: (){
-                  Navigator.of(context).pop();
-                }
-              )
-            ],
-          );
-        });
-  }
+  // Future<void> _showWarning() async{
+  //   return showDialog(
+  //       context: context,
+  //       barrierDismissible: false,
+  //       builder: (BuildContext context){
+  //         return AlertDialog(
+  //           title: Text("Warning"),
+  //           content: SingleChildScrollView(
+  //             child: ListBody(
+  //               children: <Widget>[
+  //                 Text('If you are having a medical emergency'),
+  //                 Text('Dial 911 immediately')
+  //               ],
+  //             ),
+  //           ),
+  //           actions: <Widget> [
+  //             TextButton(
+  //               child: Text("I understand"),
+  //               onPressed: (){
+  //                 Navigator.of(context).pop();
+  //               }
+  //             )
+  //           ],
+  //         );
+  //       });
+  // }
 
 
   @override
@@ -120,7 +120,7 @@ class _ResourcesState extends State<Resource> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                          padding: EdgeInsets.fromLTRB(30, 10, 30, 5),
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text('SAMHSA’s National Helpline is a free, confidential, 24/7, 365-day-a-year treatment referral and information service (in English and Spanish) for individuals and families facing mental and/or substance use disorders.'),
@@ -178,7 +178,6 @@ class _ResourcesState extends State<Resource> {
                         ),
                       ],
                     ),
-
                   ),
                   Container(
                     height: 170,
