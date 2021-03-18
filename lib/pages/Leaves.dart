@@ -27,13 +27,14 @@ class LeavesHome extends StatefulWidget {
 }
 
 class _LeavesState extends State<LeavesHome>{
-  List<Post> leaves_posts = [];
+  // ignore: non_constant_identifier_names
+  static List<Post> leaves_posts = [];
   ScrollController _scrollController = new ScrollController();
 
   @override
   void initState(){
     super.initState();
-    getPosts(10);
+    fetch(10);
   }
 
   @override
@@ -45,6 +46,7 @@ class _LeavesState extends State<LeavesHome>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey,
       drawer: Sidebar(),
       appBar: AppBar(
         title: Text(widget.title),
@@ -63,13 +65,23 @@ class _LeavesState extends State<LeavesHome>{
                 margin: EdgeInsets.all(15),
                 padding: EdgeInsets.all(15),
                 height: 150,
-                constraints: BoxConstraints.tightFor(height: 150.0),
+                constraints: BoxConstraints.tightFor(height: 95.0),
                 decoration: BoxDecoration(
-                  color: Colors.lightGreen,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
+                child: ListTile(
+                  title: Text(
+                    leaves_posts[index].title,
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  subtitle: Text("u/"+
+                    leaves_posts[index].author,
+                    style: TextStyle(fontSize: 17),
+                  ),
+                ),
               ),
-
             ],
           );
         },
