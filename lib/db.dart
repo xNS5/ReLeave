@@ -407,18 +407,21 @@ class Goal{
   String _title;
   String _goalType;
   String _consumptionMethod;
+  String _date;
   int _goalConsumptionAmount;
   double _goalMoney;
 
   Goal();
 
-  Goal.Data(this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
+  Goal.Data(this._title, this._goalType, [ this._date, this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
 
   int get id => _id;
 
   String get title => _title;
 
   String get goalType => _goalType;
+
+  String get date => _date;
 
   String get consumptionMethod => _consumptionMethod;
 
@@ -429,6 +432,12 @@ class Goal{
   set id(int i){
     if(i > 0){
       this._id = i;
+    }
+  }
+
+  set date(String date){
+    if(date != null){
+      this._date = date;
     }
   }
 
@@ -459,6 +468,7 @@ class Goal{
     var map = Map<String, dynamic>();
     map['id'] = this._id;
     map['title'] = this._title;
+    map['date'] = this._date;
     map['goaltype'] = this._goalType;
     map['consumptionMethod'] = this._goalType;
     map['goalAmount'] = this._goalConsumptionAmount;
@@ -468,6 +478,7 @@ class Goal{
   Goal.fromMap(Map<String, dynamic> map){
     this._id = map['id'];
     this._title = map['title'];
+    this._date = map['date'];
     this._goalType = map['goaltype'];
     this._consumptionMethod = map['consumptionMethod'];
     this._goalConsumptionAmount = map['goalAmount'];
@@ -684,6 +695,7 @@ class SqlitedbHelper {
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
               'title TEXT, '
               'goaltype TEXT, '
+              'date TEXT, '
               'consumptionMethod TEXT, '
               'goalAmount INTEGER, '
               'goalSaved REAL)');
@@ -860,7 +872,7 @@ class SqlitedbHelper {
   Future<bool> insertGoal(Goal goal) async{
     try{
       final db = await database;
-      goal.id = await db.insert('goal', goal.toMap());
+      goal.id = await db.insert('goal', goal.toMap(), conflictAlgorithm:  ConflictAlgorithm.replace);
       return true;
     }catch(e){
       print("Unable to insert goal into database: " + e.toString());
