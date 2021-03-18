@@ -170,7 +170,7 @@ class _ResourcesState extends State<Resource> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(30, 10, 25, 0),
+                          padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
                           child: Align(
                             alignment: Alignment.topLeft,
                             child: Text('Answers some common questions about marijuana including questions concerning its effects, addictive potential, and how to know if you are addicted.'),
