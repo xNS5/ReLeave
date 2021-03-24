@@ -5,6 +5,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:async';
 import 'package:sprintf/sprintf.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
 
 
 
@@ -29,9 +31,9 @@ class User {
 
   User();
 
-  User.data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._username]);
+  User.Data(this._firstName, this._lastName, this._birthdate, this._startdate, [this._consumptionMethod, this._amount, this._money, this._username]);
 
-  User.consumption(this._consumptionMethod, this._amount, this._money);
+  User.Consumption(this._consumptionMethod, this._amount, this._money);
 
   int get id => _id;
 
@@ -154,18 +156,23 @@ class Journal{
   int _id;
   String _date;
   String _content;
+  String _title;
   int _posted;
   String _redditURL;
 
   Journal();
 
-  Journal.Data(this._id, this._date, this._content, this._posted, [this._redditURL]);
+  Journal.Data(this._id, this._date, this._content, this._title, this._posted, [this._redditURL]);
+
+  Journal.Content(this._date, this._content, this._posted, [this._redditURL]);
 
   int get id => _id;
 
   String get date => _date;
 
   String get content => _content;
+
+  String get title => _title;
 
   CheckInData get checkin => checkin;
 
@@ -190,6 +197,10 @@ class Journal{
     this._content = content;
   }
 
+  set title(String title){
+    this._title = title;
+  }
+
   set setPosted(bool status){
     this._posted = (status == true) ? 1 : 0;
   }
@@ -202,6 +213,7 @@ class Journal{
     var map = Map<String, dynamic>();
     map['date'] = _date;
     map['content'] = _content;
+    map['title'] = _title;
     map['posted'] = _posted;
     map['url'] = _redditURL;
     return map;
@@ -212,6 +224,7 @@ class Journal{
       this._id = map['id'];
       this._date = map['date'];
       this._content = map['content'];
+      this._title = map['title'];
       this._posted = map['posted'];
       this._redditURL = map['url'];
     }
@@ -239,10 +252,12 @@ class Feelings{
   int _craving;
   int _frustrated;
   int _angry;
+  int _lonely;
+  int _abstained;
 
   Feelings();
 
-  Feelings.Data(this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry);
+  Feelings.Data(this._date, this._happy, this._sad, this._anxious, this._craving, this._frustrated, this._angry, this._lonely, this._abstained);
 
   int get id => _id;
 
@@ -259,6 +274,10 @@ class Feelings{
   int get frustrated => _frustrated;
 
   int get angry => _angry;
+
+  int get lonely => _lonely;
+
+  bool get abstained => (_abstained == 1) ? true : false;
 
   set id(int i){
     if(i > 0){
@@ -297,6 +316,14 @@ class Feelings{
     this._angry = a;
   }
 
+  set lonely(int l) {
+    this._lonely = l;
+  }
+
+  set abstained (bool a){
+    this._abstained = (a == true) ? 1 : 0;
+  }
+
   Map<String, dynamic> toMap(){
     var map = Map<String, dynamic>();
     map['date'] = _date;
@@ -306,7 +333,8 @@ class Feelings{
     map['frustrated'] = _frustrated;
     map['angry'] = _angry;
     map['craving'] = _craving;
-
+    map['lonely'] = _lonely;
+    map['abstained'] = _abstained;
     return map;
   }
 
@@ -319,6 +347,8 @@ class Feelings{
       this._frustrated = map['frustrated'];
       this._angry = map['angry'];
       this._craving = map['craving'];
+      this._lonely = map['lonely'];
+      this._abstained = map['abstained'];
     }
   }
 
@@ -394,18 +424,21 @@ class Goal{
   String _title;
   String _goalType;
   String _consumptionMethod;
+  String _date;
   int _goalConsumptionAmount;
   double _goalMoney;
 
   Goal();
 
-  Goal.Data(this._title, this._goalType, [this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
+  Goal.Data(this._title, this._goalType, [ this._date, this._consumptionMethod, this._goalConsumptionAmount, this._goalMoney]);
 
   int get id => _id;
 
   String get title => _title;
 
   String get goalType => _goalType;
+
+  String get date => _date;
 
   String get consumptionMethod => _consumptionMethod;
 
@@ -419,10 +452,13 @@ class Goal{
     }
   }
 
-  set title(String title){
-    if(title.length == 0){
-      this._title = " ";
+  set date(String date){
+    if(date != null){
+      this._date = date;
     }
+  }
+
+  set title(String title){
     this._title = title;
   }
 
@@ -446,15 +482,18 @@ class Goal{
     var map = Map<String, dynamic>();
     map['id'] = this._id;
     map['title'] = this._title;
+    map['date'] = this._date;
     map['goaltype'] = this._goalType;
     map['consumptionMethod'] = this._goalType;
     map['goalAmount'] = this._goalConsumptionAmount;
     map['goalSaved'] = this._goalMoney;
+    return map;
   }
 
   Goal.fromMap(Map<String, dynamic> map){
     this._id = map['id'];
     this._title = map['title'];
+    this._date = map['date'];
     this._goalType = map['goaltype'];
     this._consumptionMethod = map['consumptionMethod'];
     this._goalConsumptionAmount = map['goalAmount'];
@@ -570,11 +609,67 @@ class SqlitedbHelper {
   Future<Database> get database async {
     if (_database == null) {
       _database = await _createDB();
+      // _setupAchievements(_database);
+      // await _database.execute("ATTACH DATABASE 'db/releave_achievements.db' AS achData");
+      // await _database.execute("INSERT INTO 'releave.db'.achievement SELECT * FROM achData.achievement");
     }
     return _database;
   }
 
+
+  Future<Database> _getAchDB(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+
+    } else {
+      print("Opening existing database");
+    }
+    // open the database
+    return await openDatabase(achPath, readOnly: true);
+  }
+
+
+  void _setupAchievements(Database db) async {
+    String achPath = join((await getDatabasesPath()), "achievement_data.db");
+    var achExists = await databaseExists(achPath);
+    if (!achExists) {
+      // will only happen on first call
+      print("Creating new copy from asset.");
+
+      // Make sure the parent directory exists
+      try {
+        await Directory(dirname(achPath)).create(recursive: true);
+      } catch (_) {}
+
+      // Copy from asset
+      ByteData data = await rootBundle.load(join("assets", "db/releave_achievements.db"));
+      List<int> bytes =
+      data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+
+      // Write and flush the bytes written
+      await File(achPath).writeAsBytes(bytes, flush: true);
+      Database achDB = await openDatabase(achPath, readOnly: true);
+    }
+  }
+
   Future<Database> _createDB() async {
+
     String path = join((await getDatabasesPath()), "releave.db");
     return await openDatabase(
         path,
@@ -595,6 +690,7 @@ class SqlitedbHelper {
               'date TEXT, '
               'content TEXT, '
               'posted INTEGER, '
+              'title TEXT, '
               'url TEXT)');
           await db.execute('CREATE TABLE feeling('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
@@ -604,7 +700,9 @@ class SqlitedbHelper {
               'anxious INTEGER, '
               'frustrated INTEGER, '
               'angry INTEGER, '
-              'craving INTEGER)');
+              'craving INTEGER, '
+              'lonely INTEGER, '
+              'abstained INTEGER)');
           await db.execute('CREATE TABLE checkin('
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
               'date TEXT, '
@@ -613,6 +711,7 @@ class SqlitedbHelper {
               'id INTEGER PRIMARY KEY AUTOINCREMENT, '
               'title TEXT, '
               'goaltype TEXT, '
+              'date TEXT, '
               'consumptionMethod TEXT, '
               'goalAmount INTEGER, '
               'goalSaved REAL)');
@@ -682,9 +781,8 @@ class SqlitedbHelper {
   Future<List> getGoal() async{
     final db = await database;
     try{
-      List<Goal> list = new List<Goal>();
-      var goals = await db.query('goal');
-      return goals.toList();
+      var results = await db.query('goal');
+      return results.toList();
     }catch(e){
       print("Error getting goals: " + e.toString());
     }
@@ -692,8 +790,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getAchievements() async{
+    final db = await database;
     try{
-      final db = await database;
       var achievements = await db.query('achievement');
       return achievements.toList();
     } catch (e){
@@ -703,8 +801,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getAchievementsType(String type) async{
+    final db = await database;
     try{
-      final db = await database;
       var achievements = await db.query('achievement', where: 'goaltype = $type');
       return achievements.toList();
     } catch (e){
@@ -714,8 +812,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getUnAchieved() async{
-    try{
-      final db = await database;
+  final db = await database;
+   try{
       var achievements = await db.query('achievement', where: 'achieved = ?', whereArgs: [0]);
       return achievements.toList();
     } catch (e){
@@ -725,8 +823,8 @@ class SqlitedbHelper {
   }
 
   Future<List> getUnAchievedType(String type) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       var achievements = await db.query('achievement', where: 'goaltype = $type AND achieved = ?', whereArgs: [0]);
       return achievements.toList();
     } catch (e){
@@ -762,14 +860,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertFeeling(Feelings feels) async{
-
+    final db = await database;
     try{
-      // If it already exists, update instead.
-      // var temp = getFeelings(feels.date);
-      // if(temp != null){
-      //   return updateFeeling(feels);
-      // }
-      final db = await database;
       if(feels != null){
         feels.id = await db.insert('feeling', feels.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
         return true;
@@ -781,8 +873,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertCheckin(CheckInData check) async{
+    final db = await database;
     try {
-      final db = await database;
       check.id = await db.insert('checkin', check.toMap());
       return true;
     } catch (e){
@@ -792,9 +884,9 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertGoal(Goal goal) async{
+    final db = await database;
     try{
-      final db = await database;
-      goal.id = await db.insert('goal', goal.toMap());
+      goal.id = await db.insert('goal', goal.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
       print("Unable to insert goal into database: " + e.toString());
@@ -803,8 +895,8 @@ class SqlitedbHelper {
   }
 
   Future<bool> insertAchievement(AchievementData a) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       a.id = await db.insert('achievement', a.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
       return true;
     }catch(e){
@@ -818,8 +910,8 @@ class SqlitedbHelper {
   * Update methods
   * */
   Future<bool> updateUser(User user) async{
-    try{
-      final db = await database;
+   final db = await database;
+   try{
       await db.update('user', user.toMap(), where: 'id = ?', whereArgs: [user.id]);
       print(await db.query('user'));
       return true;
